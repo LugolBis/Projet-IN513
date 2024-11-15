@@ -9,4 +9,5 @@
 @vote.sql
 @signal.sql
 @answer.sql
+@hashtag.sql
 @has_hashtag.sql
