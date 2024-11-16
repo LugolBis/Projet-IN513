@@ -13,5 +13,5 @@ create view Rank as
 select Post.pseudo as pseudo, sum(Vote.value) as rank
 from Post, Vote
 where Post.idpost=Vote.idpost
-group by Post.idpost
+group by Post.idpost, Post.pseudo
 order by rank desc;
