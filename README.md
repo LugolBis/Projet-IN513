@@ -23,8 +23,10 @@ montrant les possibilités de la base de donnée.
 ## A faire
 
 1. Créer les tables
-1. Créer les vues
 1. Créer les contraintes d'intégrité
 1. Donner les droits
 1. Peupler la base de données
+1. Créer les vues
 1. Ecrire les exemples
+1. Encapsuler dans des fonctions
+1. Encapsuler dans des packages
