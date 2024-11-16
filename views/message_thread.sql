@@ -8,15 +8,16 @@ EXCEPTION
         end if;
 end;
 /
--- Création de la vue
-MessageFrom = (select PV.pseudo 
-    from PrivateMessage PV, Receive R
-    where R.idpm=PV.idpm and R.pseudo=&CURRENT_USER)
 
-MessageTo = () 
-create view MessageThread as (
-     as MFROM;
-    (select PV.pseudo 
-    from PrivateMessage PV, Receive R
-    where R.idpm=PV.idpm and R.pseudo=&CURRENT_USER) as MFROM;
-    );
+create view MessageThread as
+select idpm 
+from PrivateMessage
+where idpm in (   -- On sélection l'id des messages 
+   select PV.idpm 
+   from PrivateMessage PV, Receive R
+   where R.idpm=PV.idpm and R.pseudo=&CURRENT_USER and PV.sender=&TARGET_USER) 
+or idpm in (
+   select R.idpm
+   from PrivateMessage PV, Receive R
+   where R.idpm=PV.idpm and R.pseudo=&TARGET_USER and PV.sender=&CURRENT_USER)
+order by idpm desc;
