@@ -12,7 +12,7 @@ end;
 create view RankPost as
 select sum(value) as rank,
     (select sum(value) from Vote where idpost=&ID_POST and value<0 group by idpost) as downvotes,
-    (rank-downvotes) as upvotes
+    (select sum(value) from Vote where idpost=&ID_POST and value>0 group by idpost) as downvotes
 from Vote
 where idpost=&ID_POST
 group by idpost;

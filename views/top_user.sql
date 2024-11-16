@@ -10,7 +10,7 @@ end;
 /
 
 create view TopUser as
-select pseudo, count(*) as nb_followers
+select Users.pseudo, count(*) as nb_followers
 from Users left join Follow on Users.pseudo=Follow.pseudo
 group by Users.pseudo
 order by nb_followers desc;
