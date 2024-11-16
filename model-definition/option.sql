@@ -1,4 +1,4 @@
-create table Option(
+create table Options(
     idoption Number(6),
     content varchar(150) not null,
     idsurvey Number(5),

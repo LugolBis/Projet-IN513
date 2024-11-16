@@ -1,4 +1,4 @@
-create table User (
+create table Users (
     pseudo varchar(15) primary key,
     name varchar(30),
     surname varchar(30),

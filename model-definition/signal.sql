@@ -1,5 +1,5 @@
 create table Signal(
-    user varchar(15),
+    pseudo varchar(15),
     idpost Number(5),
-    primary key (user, idpost)
+    primary key (pseudo, idpost)
 );
