@@ -1,3 +1,5 @@
+@delete_tables.sql
+
 @user.sql
 @post.sql
 @survey.sql

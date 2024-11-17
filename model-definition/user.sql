@@ -1,16 +1,6 @@
--- Supression de la table
-begin
-   EXECUTE IMMEDIATE 'DROP TABLE Users';
-EXCEPTION
-   when OTHERS then
-        if SQLCODE != -942 then
-         RAISE;
-        end if;
-end;
-/
 -- Création de la table
 create table Users (
-    pseudo varchar(15) primary key on delete cascade,
+    pseudo varchar(15) primary key,
     name varchar(30),
     surname varchar(30),
     mail varchar(30) not null,
