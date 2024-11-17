@@ -4,10 +4,10 @@ alter table Follow add constraint follow_self check (pseudo!=follower);
 -- Un utilisateur ne peut pas s'envoyer de message privé à lui même
 create or replace trigger recipient_self before insert on Receive for each row
 declare
-    SENDER varchar2;
+    SENDER varchar2(15);
     RECIPIENT number;
 begin
-    select pseudo into SENDER
+    select sender into SENDER
     from PrivateMessage
     where idpm = :new.idpm;
 
@@ -19,6 +19,7 @@ begin
 
         if RECIPIENT = 0 then
             delete from PrivateMessage where idpm = :new.idpm;
+        end if;
 
         RAISE_APPLICATION_ERROR(-20030, '' || :new.pseudo || ' tried to send a private message to himself.');
     end if;
@@ -28,7 +29,7 @@ end;
 -- Un utilisateur ne peut pas upvoter/downvoter ses propres posts
 create or replace trigger vote_self before insert on Vote for each row
 declare
-    POST_PSEUDO varchar2;
+    POST_PSEUDO varchar2(15);
 begin
     select pseudo into POST_PSEUDO
     from Post
@@ -43,7 +44,7 @@ end;
 -- Unicité du mail de chaque utilisateur
 create or replace trigger mail_unicity before insert on Users for each row
 declare
-    MAIL_EXIST varchar2;
+    MAIL_EXIST varchar2(15);
 begin
     select mail into MAIL_EXIST
     from Users
