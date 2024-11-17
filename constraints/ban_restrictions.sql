@@ -1,0 +1,1 @@
+-- Bloquer la connexion de l'utilisateur à la BDD
