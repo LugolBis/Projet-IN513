@@ -12,5 +12,7 @@ end;
 create table Answer(
     pseudo varchar(15),
     idoption Number(6),
-    primary key (pseudo, idoption)
+    primary key (pseudo, idoption),
+    foreign key (pseudo) references Users(pseudo),
+    foreign key (idoption) references Options(idoption)
 );

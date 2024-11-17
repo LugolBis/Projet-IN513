@@ -12,5 +12,7 @@ end;
 create table Signal(
     pseudo varchar(15),
     idpost Number(5),
-    primary key (pseudo, idpost)
+    primary key (pseudo, idpost),
+    foreign key (pseudo) references Users(pseudo),
+    foreign key (idpost) references Post(idpost)
 );

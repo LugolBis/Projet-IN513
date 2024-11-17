@@ -10,7 +10,7 @@ end;
 /
 -- Création de la table
 create table Users (
-    pseudo varchar(15) primary key,
+    pseudo varchar(15) primary key on delete cascade,
     name varchar(30),
     surname varchar(30),
     mail varchar(30) not null,

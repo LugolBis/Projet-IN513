@@ -10,8 +10,9 @@ end;
 /
 -- Création de la table
 create table Survey(
-    idsurvey Number(5),
+    idsurvey Number(5) on delete cascade,
     question varchar(280) not null,
     idpost Number(5),
-    primary key (idsurvey, idpost)
+    primary key (idsurvey, idpost),
+    foreign key (idpost) references Post(idpost) 
 );

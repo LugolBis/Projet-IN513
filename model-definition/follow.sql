@@ -14,5 +14,7 @@ create table Follow(
     pseudo varchar(15),
     -- follower référence le ou les utilisateur(s) qui suivent 'pseudo'             
     follower varchar(15),
-    primary key (pseudo, follower)
+    primary key (pseudo, follower),
+    foreign key (pseudo) references Users(pseudo),
+    foreign key (follower) references Users(follower)
 );

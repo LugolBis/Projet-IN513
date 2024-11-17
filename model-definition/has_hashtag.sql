@@ -12,5 +12,7 @@ end;
 create table HasHashtag(
     idpost Number(5),
     hashtag varchar(140),
-    primary key (idpost, hashtag)
+    primary key (idpost, hashtag),
+    foreign key (idpost) references Post(idpost),
+    foreign key (hashtag) references Hashtag(name)
 );

@@ -13,5 +13,6 @@ create table Options(
     idoption Number(6),
     content varchar(150) not null,
     idsurvey Number(5),
-    primary key (idoption, idsurvey)
+    primary key (idoption, idsurvey),
+    foreign key (idsurvey) references Survey(idsurvey)
 );

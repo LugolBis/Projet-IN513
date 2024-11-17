@@ -1,0 +1,57 @@
+Détails des prompts à fournir à Chat-GPT
+
+Prompt 1
+Je voudrai que tu m'assiste sur un projet de Base de données développé en SQL et déployé sur Oracle Database.
+Pourrais tu analyser et enregistrer les tables suivantes :
+*Coller la création de toutes les tables*
+Si tu as bien tout compris et enregistré réponds "Fait!".
+
+Prompt 2
+Pourrais tu analyser et enregistrer les contraintes d'intégritées suivantes :
+*Coller les contraintes d'intégritées*
+Si tu as bien tout compris et enregistré réponds "Fait!".
+
+Prompt 3
+Pourrais tu analyser et enregistrer les vues suivantes :
+*Coller les vues*
+Si tu as bien tout compris et enregistré réponds "Fait!".
+
+Prompt 4
+Pourrais tu analyser et enregistrer les requêtes suivantes (portant sur la base de donnée que je t'ai présenté ci dessus) :
+*Coller les requêtes en Français*
+Ne te préoccupe pas de savoir les coder en SQL. Je veux que tu comprenne bien le sens de celles-ci.
+Si tu as bien tout compris et enregistré réponds "Fait!".
+
+Prompt 5
+Pourrais tu peupler la table 'Users' de telle sorte qu'il y ai 50 utilisateurs.
+Fournis moi un code SQL qui effectue chaque insertion ligne par ligne et tous le contenu a insérer au format csv.
+
+Prompt 6
+Pourrais tu peupler la table 'Post' de telle sorte qu'il y ai 70 posts.
+Crée de la diversité dans les posts et essaie de donner du sens aux requêtes.
+Ce que je veux c'est que chaque requête donne au moins un résultat.
+Je veux qu'il y ai entre 10 et 40 entrées dont le message contient des '#'.
+Je veux qu'il y ai entre 10 et 15 utilisateurs absent de la table Post.
+Je veux qu'il y ai environ 40 entrées dont le message contient une question.
+Je veux que le champ 'building' soit rempli dans environ la moitié des posts.
+Les valeurs possibles pour le champ 'building' sont 'Buffon', 'Fermat', 'Germain', 'Descartes', 'Joliot Curie'.
+Les valeurs possibles pour le champ 'room' sont 'Salle ' suivit d'un chiffre entre 0 et 499 et 'Amphi ' suivit d'une lettre majuscule.
+Fournis moi un code SQL qui effectue chaque insertion ligne par ligne et tous le contenu a insérer au format csv.
+
+Prompt 7
+Pourrais tu peupler la table 'Survey' de telle sorte qu'il y ai 30 survey.
+Je veux que la moitié contiennent une question identique à celle posée dans le post auquel il est lié.
+Fournis moi un code SQL qui effectue chaque insertion ligne par ligne et tous le contenu a insérer au format csv.
+
+Prompt 8
+Pourrais tu peupler la table 'Option' de telle sorte qu'il y ai 80 options.
+Je veux que qu'il y ai entre 40 et 60 options qui ont un 'content' partagé avec au moins une autre option.
+Fournis moi un code SQL qui effectue chaque insertion ligne par ligne et tous le contenu a insérer au format csv.
+
+Prompt 9
+Pourrais tu peupler la table 'PrivateMessage' de telle sorte qu'il y ai 60 messages.
+Fournis moi un code SQL qui effectue chaque insertion ligne par ligne et tous le contenu a insérer au format csv.
+
+Prompt 10
+Pourrais tu peupler les autres tables en prenant le soin de faire en sorte qu'il existe au moins quelques cas répondant aux requêtes.
+Fait attention à ce que la cohérence soit respectée. Je voudrai qu'il y ai entre 30 et 40 entrées pour toutes les autres tables.
