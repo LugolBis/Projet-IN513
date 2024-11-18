@@ -2,17 +2,10 @@
 create or replace trigger survey_id before insert on Survey for each row
 declare
     NEW_ID number := 0;
-    CURSOR_ID number;
-    cursor c1 is select distinct idsurvey
-    from Survey order by idsurvey;
 begin
-    open c1;
-loop
-    EXIT when c1%NOTFOUND or NEW_ID < CURSOR_ID;
-    fetch c1 into CURSOR_ID;
-    NEW_ID := NEW_ID+1;
-end loop;
-    close c1;
-    :new.idsurvey := NEW_ID;
+    select max(idpost)+1 into NEW_ID
+    from Post
+    group by idpost;
+    :new.idpost := NEW_ID;
 end;
 /

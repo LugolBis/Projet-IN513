@@ -1,0 +1,11 @@
+create user C##moderator identified by Wc_Uz@07 default tablespace users QUOTA 10M on users;
+grant select, update, delete on Users to C##moderator;
+grant select, insert, delete on Post to C##moderator;
+grant select, insert, delete on Survey to C##moderator;
+grant select, insert, delete on Vote to C##moderator;
+grant select, insert, delete on Draft to C##moderator;
+grant select, insert on Signal to C##moderator;
+grant select, insert on PrivateMessage to C##moderator;
+grant select on Receive to C##moderator;
+grant select on HasHashtag to C##moderator;
+grant select on Hashtag to C##moderator;

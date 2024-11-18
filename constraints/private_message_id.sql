@@ -2,17 +2,10 @@
 create or replace trigger private_message_id before insert on PrivateMessage for each row
 declare
     NEW_ID number := 0;
-    CURSOR_ID number;
-    cursor c1 is select distinct idpm
-    from PrivateMessage order by idpm;
 begin
-    open c1;
-loop
-    EXIT when c1%NOTFOUND or NEW_ID < CURSOR_ID;
-    fetch c1 into CURSOR_ID;
-    NEW_ID := NEW_ID+1;
-end loop;
-    close c1;
-    :new.idpm := NEW_ID;
+    select max(idpost)+1 into NEW_ID
+    from Post
+    group by idpost;
+    :new.idpost := NEW_ID;
 end;
 /

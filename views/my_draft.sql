@@ -11,5 +11,5 @@ end;
 -- Création de la vue
 create view MyDraft as
 select * from Draft 
-where pseudo=&CURRENT_USER
+where pseudo=auth_pkg.CURRENT_USER
 order by iddraft desc;

@@ -11,5 +11,5 @@ end;
 -- Création de la vue
 create view Feed as
 select * from Post
-where pseudo in (select pseudo from Follow where follower=&CURRENT_USER) /* On sélectionne tous les pseudos suivis par l'utilisateur */
+where pseudo in (select pseudo from Follow where follower=auth_pkg.CURRENT_USER) /* On sélectionne tous les pseudos suivis par l'utilisateur */
 order by date_post desc;

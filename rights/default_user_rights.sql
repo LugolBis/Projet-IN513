@@ -1,0 +1,11 @@
+create user C##client identified by client123 default tablespace users QUOTA 10M on users;
+grant select on Users to C##client;
+grant select, insert on Post to C##client;
+grant select, insert on Survey to C##client;
+grant select, insert, delete on Vote to C##client;
+grant select, insert, delete on Draft to C##client;
+grant select, insert on Signal to C##client;
+grant select, insert on PrivateMessage to C##client;
+grant select on Receive to C##client;
+grant select on HasHashtag to C##client;
+grant select on Hashtag to C##client;
