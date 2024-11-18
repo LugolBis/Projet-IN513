@@ -3,9 +3,9 @@ create or replace trigger private_message_id before insert on PrivateMessage for
 declare
     NEW_ID number := 0;
 begin
-    select max(idpost)+1 into NEW_ID
-    from Post
-    group by idpost;
-    :new.idpost := NEW_ID;
+    select max(idpm)+1 into NEW_ID
+    from PrivateMessage
+    group by idpm;
+    :new.idpm := NEW_ID;
 end;
 /

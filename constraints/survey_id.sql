@@ -3,9 +3,9 @@ create or replace trigger survey_id before insert on Survey for each row
 declare
     NEW_ID number := 0;
 begin
-    select max(idpost)+1 into NEW_ID
-    from Post
-    group by idpost;
-    :new.idpost := NEW_ID;
+    select max(idsurvey)+1 into NEW_ID
+    from Survey
+    group by idsurvey;
+    :new.idsurvey := NEW_ID;
 end;
 /
