@@ -5,4 +5,4 @@ create user admin identified by banane;
 grant create session to admin;
 grant unlimited tablespace to admin;
 grant create table to admin;
-grant execute procedure to admin;
+grant create procedure to admin;

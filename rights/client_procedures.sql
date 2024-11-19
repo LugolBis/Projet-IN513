@@ -5,11 +5,11 @@ create or replace function is_post_cooldown_up return number as
 	delay number  := 0.0;
 begin
 	select
-		max(date_post) in max_date
+		max(date_post) into max_date
 	from
 		Post
 	where
-		upper(pseudo) = current_user;
+		upper(pseudo) = user;
 
 	delay := current_date - max_date;
 	-- Conversion en secondes
@@ -30,11 +30,11 @@ begin
 		count(content) into occurences
 	from Hashtag where content = hashtag;
 
-	if occurences == 0 then
+	if occurences = 0 then
 		insert into Hashtag values (hashtag);
 	end if;
 
-	insert into HasHashtag values (post, hashtag)
+	insert into HasHashtag values (post, hashtag);
 end;
 /
 
@@ -59,12 +59,13 @@ begin
 	--	- Etat 1: Récupération du hashtag dans buffer
 	for i in 1..length(msg) loop
 		c := substr(msg, i, 1);
-		if state = 0 and c = '#' then
-			state = 1;
+		if parser_state = 0 and c = '#' then
+			parser_state := 1;
 		else
 			if c = ' ' or i = length(msg)-1 then
-				add_hashtag(buffer);
-				buffer = '';
+				add_hashtag(buffer, post);
+				buffer := '';
+				parser_state := 0;
 			else
 				buffer := buffer || c;
 			end if;
@@ -76,12 +77,12 @@ end;
 
 -- Seul et unique moyen d'ajouter des posts dans la base de donnée
 -- pour l'utilisateur lambda.
-create or replace procedure add_post(msg IN varchar, romm IN varchar, building IN varchar) as
+create or replace procedure add_post(msg IN varchar, room IN varchar, building IN varchar) as
 begin
-	if !is_post_cooldown_up then
+	if not is_post_cooldown_up = 1 then
 		raise_application_error(-351435, 'Please wait at least 2 seconds before posting again.');
 	else
-		insert into Post values (sys_guid(), msg, current_date, room, building, current_user);
+		insert into Post values (sys_guid(), msg, current_date, room, building, user);
 		parse_hashtags(msg);
 	end if;
 end;
