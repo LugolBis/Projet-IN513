@@ -1,6 +1,6 @@
 -- Création de la table
 create table Post (
-    idpost Number(5) primary key,
+    idpost Number(16) primary key,
     message varchar(280) not null,
     date_post date not null,
     room varchar(20),

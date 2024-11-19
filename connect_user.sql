@@ -1,2 +1,0 @@
--- Implémenter une fonction qui permet de valider ou rejeter la connexion d'un utilisateur
--- Cette fonction initialisera la variable globale &CURRENT_USER utilisée dans de nombreuses fonctions (notamment la création des vues)
