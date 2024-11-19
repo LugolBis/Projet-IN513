@@ -15,6 +15,8 @@ begin
 	-- Conversion en secondes
 	delay := delay * 24 * 3600;
 
+	dbms_output.put_line(delay);
+
 	if delay > 2.0 then
 		return 1;
 	else
@@ -43,7 +45,7 @@ end;
 create or replace procedure parse_hashtags(post IN varchar) as
 	msg varchar(280) := 'none';
 	parser_state number(1) := 0;
-	buffer varchar(140) := 'none';
+	buffer varchar(140) := '';
 	c varchar(1) := '_';
 begin
 	-- Récupération du text du post dans msg.
@@ -61,7 +63,9 @@ begin
 		c := substr(msg, i, 1);
 		if parser_state = 0 and c = '#' then
 			parser_state := 1;
-		elsif c = ' ' or i = length(msg)-1 then
+			buffer := '';
+		else
+			if parser_state = 1 and (c = ' ' or i = length(msg)-1) then
 				add_hashtag(buffer, post);
 				buffer := '';
 				parser_state := 0;
