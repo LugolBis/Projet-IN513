@@ -61,8 +61,7 @@ begin
 		c := substr(msg, i, 1);
 		if parser_state = 0 and c = '#' then
 			parser_state := 1;
-		else
-			if c = ' ' or i = length(msg)-1 then
+		elsif c = ' ' or i = length(msg)-1 then
 				add_hashtag(buffer, post);
 				buffer := '';
 				parser_state := 0;
@@ -78,12 +77,14 @@ end;
 -- Seul et unique moyen d'ajouter des posts dans la base de donnée
 -- pour l'utilisateur lambda.
 create or replace procedure add_post(msg IN varchar, room IN varchar, building IN varchar) as
+	id varchar(32) := 'none';
 begin
-	if not is_post_cooldown_up = 1 then
-		raise_application_error(-351435, 'Please wait at least 2 seconds before posting again.');
+	if is_post_cooldown_up = 1 then
+		raise_application_error(-20589, 'Please wait at least 2 seconds before posting again.');
 	else
-		insert into Post values (sys_guid(), msg, current_date, room, building, user);
-		parse_hashtags(msg);
+		id := sys_guid();
+		insert into Post values (id, msg, current_date, room, building, lower(user));
+		parse_hashtags(id);
 	end if;
 end;
 /

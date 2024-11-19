@@ -6,3 +6,4 @@ grant create session to admin;
 grant unlimited tablespace to admin;
 grant create table to admin;
 grant create procedure to admin;
+grant create user to admin;
