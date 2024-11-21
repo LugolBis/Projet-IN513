@@ -15,8 +15,6 @@ begin
 	-- Conversion en secondes
 	delay := delay * 24 * 3600;
 
-	dbms_output.put_line(delay);
-
 	if delay > 2.0 then
 		return 1;
 	else
@@ -78,16 +76,38 @@ begin
 end;
 /
 
+create or replace function new_idpost return number as
+	m_id number(6) := 0;
+	c_post number(6) := 0;
+begin
+	select
+		count(idpost) into c_post
+	from
+		Post;
+
+	if c_post = 0 then
+		return 0;
+	else
+		select
+			max(idpost) into m_id
+		from
+			Post;
+
+		return m_id + 1;
+	end if;
+
+end;
+/
+
 -- Seul et unique moyen d'ajouter des posts dans la base de donnée
 -- pour l'utilisateur lambda.
 create or replace procedure add_post(msg IN varchar, room IN varchar, building IN varchar) as
 	id varchar(32) := 'none';
 begin
-	if is_post_cooldown_up = 1 then
+	if is_post_cooldown_up = 0 then
 		raise_application_error(-20589, 'Please wait at least 2 seconds before posting again.');
 	else
-		id := sys_guid();
-		insert into Post values (id, msg, current_date, room, building, lower(user));
+		insert into Post values (new_idpost, msg, current_date, room, building, lower(user));
 		parse_hashtags(id);
 	end if;
 end;
