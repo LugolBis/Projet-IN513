@@ -4,7 +4,6 @@ create table Users (
     name varchar(30),
     surname varchar(30),
     mail varchar(256) not null,
-    password varchar(256) not null,
     IPaddress varchar(256) not null,
     description varchar(160),
     ban_end date,
