@@ -120,3 +120,5 @@ begin
 	end if;
 end;
 /
+
+grant execute on admin.add_post to client;
