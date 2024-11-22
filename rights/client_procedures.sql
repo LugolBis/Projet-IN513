@@ -99,6 +99,14 @@ begin
 end;
 /
 
+-- Ajout de la location d'un post
+create or replace procedure update_location(room in varchar, buiding in varchar) as
+begin
+	update Post set room = room, building = building
+	where pseudo = lower(user);
+end;
+/
+
 -- Seul et unique moyen d'ajouter des posts dans la base de donnée
 -- pour l'utilisateur lambda.
 create or replace procedure add_post(msg IN varchar, room IN varchar, building IN varchar) as

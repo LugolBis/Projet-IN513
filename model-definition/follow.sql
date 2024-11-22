@@ -8,3 +8,5 @@ create table Follow(
     foreign key (pseudo) references Users(pseudo) on delete cascade,
     foreign key (follower) references Users(pseudo) on delete cascade
 );
+
+alter table Follow add constraint follow_self check (pseudo!=follower);
