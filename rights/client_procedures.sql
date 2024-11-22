@@ -120,3 +120,29 @@ begin
 	end if;
 end;
 /
+
+-- Permet à l'utilisateur de modifier l'attribut validate de l'un de ses brouillons (draft)
+create or replace procedure validate_draft(id in number, state in boolean) as
+begin
+	update Draft set state = state where iddraft = id;
+end;
+/
+
+/*
+Seconde implémentation de la procedure validate_draft qui rendrait obsolète le trigger 'post_draft'
+
+create or replace procedure(id number, validate in boolean) as
+	MESSAGE varchar(280);
+begin
+	if validate = TRUE then
+		select message into MESSAGE
+		from Draft
+		where iddraft = id;
+
+		user.add_post(MESSAGE, null, null);
+	else
+		delete from Daft where iddraft = :new.iddraft;
+	end if;
+end;
+/
+*/

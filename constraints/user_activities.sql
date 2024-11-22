@@ -37,8 +37,12 @@ end;
 /
 
 -- Un draft est posté, puis supprimé
-create or replace trigger post_draft before delete on Draft for each row
+create or replace trigger post_draft before update of state on Draft for each row
 begin
-    user.add_post(:old.message, null, null);
+    if :new.state = TRUE then
+        add_post(:new.message, null, null);
+    else
+        delete from Draft where iddraft = :new.iddraft;
+    end if; 
 end;
 /
