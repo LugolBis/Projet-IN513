@@ -121,6 +121,8 @@ begin
 end;
 /
 
+grant execute on admin.add_post to client;
+
 -- Permet à l'utilisateur de modifier l'attribut validate de l'un de ses brouillons (draft)
 create or replace procedure validate_draft(id in number, state in boolean) as
 begin

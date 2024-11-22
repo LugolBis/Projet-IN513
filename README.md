@@ -9,10 +9,13 @@ pourront poster, lire et réagir à des messages sur le Feed ainsi que s'envoyer
 Le fichier ```build_database.sql``` référence tous les scripts dans l'ordre d'appel. Pour construire la base de donnée il faut
 executer les commandes suivantes :
 ```
-> cd /chemin/vers/la/repo/Projet-IN513/
-> sqlplus
+$ cd /chemin/vers/la/repo/Projet-IN513/
+$ sqlplus
 [entrez les identifiants administrateurs de la BD]
-> @build_database.sql
+SQL > @users/create_users.sql
+SQL > exit
+$ sqlplus admin/banane
+SQL > @build_database.sql
 ```
 
 ## Exemples
