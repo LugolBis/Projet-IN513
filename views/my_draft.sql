@@ -15,3 +15,5 @@ begin
          end if;
 end;
 /
+
+grant execute on admin.my_draft to client;

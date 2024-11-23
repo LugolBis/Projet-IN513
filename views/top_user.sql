@@ -17,6 +17,8 @@ begin
 end;
 /
 
+grant execute on admin.get_top_user to client;
+
 /*
 DEPRECATED
 

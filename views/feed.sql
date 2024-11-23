@@ -14,3 +14,5 @@ begin
          end if;
 end;
 /
+
+grant execute on admin.get_feed to client;

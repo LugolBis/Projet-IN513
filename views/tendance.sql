@@ -19,6 +19,8 @@ begin
 end;
 /
 
+grant execute on admin.get_tendance to client;
+
 /*
 DEPRECATED
 

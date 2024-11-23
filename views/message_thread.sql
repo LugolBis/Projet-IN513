@@ -24,6 +24,8 @@ begin
 end;
 /
 
+grant execute on admin.get_message_thread to client;
+
 /*
 DEPRECATED
 

@@ -9,3 +9,4 @@
 @views/top_user.sql
 @views/urgent_signal.sql
 @views/user_ranks.sql
+@views/influencer.sql

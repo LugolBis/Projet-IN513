@@ -16,6 +16,8 @@ begin
 end;
 /
 
+grant execute on admin.get_sanctions to client;
+
 /*
 DEPRECATED
 

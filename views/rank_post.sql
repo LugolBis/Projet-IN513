@@ -19,6 +19,8 @@ begin
 end;
 /
 
+grant execute on admin.get_rank_post to client;
+
 /*
 DEPRECATED
 
