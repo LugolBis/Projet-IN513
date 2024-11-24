@@ -2,7 +2,7 @@
 -- Vue modélisant les utilisateurs faisant parti du N%
 -- des utilisateurs en fonction de leur rank
 
--- /!\ ATTENTION ce fichier doit être éxécuté après le fichier 'user_rank.sql'
+-- /!\ PROCEDURE INSTABLE
 
 create or replace procedure get_influencer(N in number) as
     TOTAL_USERS number;

@@ -8,7 +8,7 @@ begin
     select Users.pseudo, count(*) as nb_followers
     from Users left join Follow on Users.pseudo=Follow.pseudo
     group by Users.pseudo
-    order by nb_followers desc;';
+    order by nb_followers desc';
    exception
       when OTHERS then
          if SQLCODE != -955 then

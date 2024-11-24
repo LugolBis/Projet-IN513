@@ -7,6 +7,7 @@
 @views/my_draft.sql
 @views/rank_post.sql
 @views/sanctions.sql
+@views/tendance.sql
 @views/top_user.sql
 @views/urgent_signal.sql
 @views/user_ranks.sql

@@ -16,7 +16,7 @@ begin
 end;
 /
 
-grant execute on admin.get_sanctions to client;
+grant execute on admin.get_sanctions to client, moderator;
 
 /*
 DEPRECATED

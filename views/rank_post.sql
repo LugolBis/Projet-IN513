@@ -1,6 +1,8 @@
 -- Procédure créant ou remplaçant la vue RankPost
 -- Vue modélisant les statistiques d'un post donné
 
+-- /!\ PROCEDURE INSTABLE
+
 create or replace procedure get_rank_post(ID_POST in number) as
 begin
    execute immediate

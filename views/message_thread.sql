@@ -1,6 +1,8 @@
 -- Procédure créant ou remplçant la vue MessageThread
 -- Vue permettant de récupérer le fil de discussion entre l'utilisateur et un autre utilisateur donné
 
+-- /!\ PROCEDURE INSTABLE
+
 create or replace procedure get_message_thread(TARGET_USER in varchar2) as
 begin
    execute immediate

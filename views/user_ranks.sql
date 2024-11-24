@@ -9,7 +9,7 @@ begin
     from Post, Vote
     where Post.idpost = Vote.idpost
     group by Post.idpost, Post.pseudo
-    order by rank desc;';
+    order by rank desc';
    exception
       when OTHERS then
          if SQLCODE != -955 then
@@ -18,8 +18,7 @@ begin
 end;
 /
 
-grant execute on admin.get_rank to client;
-grant execute on admin.get_rank to moderator;
+grant execute on admin.get_rank to client, moderator;
 
 /*
 DEPRECATED
