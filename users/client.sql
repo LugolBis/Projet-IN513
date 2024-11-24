@@ -5,6 +5,7 @@
 
 create role client;
 grant create session to client;
+grant create view to client;
 
 
 -- Utilisateurs test, normalement les utilisateurs doivent

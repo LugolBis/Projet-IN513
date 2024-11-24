@@ -7,7 +7,7 @@
 create or replace procedure get_influencer(N in number) as
     TOTAL_USERS number;
 begin
-    execute immediate 'get_rank'; -- On crée la vue Rank pour faire des traitements dessus
+    execute immediate 'user.get_rank';
 
     select count(*) in TOTAL_USERS
     from Rank;

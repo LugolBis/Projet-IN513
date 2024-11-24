@@ -18,12 +18,13 @@ begin
 end;
 /
 
+grant execute on admin.get_rank to client;
 grant execute on admin.get_rank to moderator;
 
 /*
 DEPRECATED
 
-create view Rank as
+create or replace view Rank as
 select Post.pseudo as pseudo, sum(Vote.value) as rank
 from Post, Vote
 where Post.idpost = Vote.idpost

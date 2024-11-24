@@ -7,7 +7,7 @@ begin
    'create or replace view MyDraft as
     select * from Draft 
     where pseudo=lower(user)
-    order by iddraft desc;';
+    order by iddraft desc';
    exception
       when OTHERS then
          if SQLCODE != -955 then
@@ -16,4 +16,4 @@ begin
 end;
 /
 
-grant execute on admin.my_draft to client;
+grant execute on admin.get_my_draft to client;

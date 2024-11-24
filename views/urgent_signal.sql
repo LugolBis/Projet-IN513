@@ -18,7 +18,7 @@ end;
 /
 
 -- ATTENTION /!\ Cette procédure est manipulée uniquement par les moderateurs
-grant execute on admin.urgent_signal to moderator;
+grant execute on admin.get_urgent_signal to moderator;
 
 /*
 DEPRECATED

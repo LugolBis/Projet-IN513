@@ -15,7 +15,7 @@ begin
       select R.idpm
       from PrivateMessage PV, Receive R
       where R.idpm=PV.idpm and R.pseudo=' || TARGET_USER || ' and PV.sender=lower(user))
-    order by idpm desc;';
+    order by idpm desc';
    exception
       when OTHERS then
          if SQLCODE != -955 then
