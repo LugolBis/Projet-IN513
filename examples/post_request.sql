@@ -53,44 +53,46 @@ end;
 /
 
 -- R12
-create or replace function word_parser(CONTENT in varchar2) as
+create or replace function word_parser(CONTENT in varchar2, WORD in varchar) return boolean as
 begin
-
-
-
-
-create or replace procedure parse_hashtags(post IN varchar) as
-	msg varchar(280) := 'none';
-	parser_state number(1) := 0;
 	buffer varchar(140) := '';
 	c varchar(1) := '_';
+
+    return REGEXP_LIKE(CONTENT, WORD);
+    /*
+	for i in 1..length(CONTENT) loop
+		c := substr(CONTENT, i, 1);
+        if c is in ('.', ',', '!', '?', ':', ';', "'", '"', '(', ')', '[', ']', '{', '}','-', '_', '=', '+', '*', '/', '\\',  
+        '|', '<', '>', '~', '`', '@', '#', '$', '%', '^', '&', ' ') then
+            if buffer = WORD then
+                return TRUE;
+            else
+                buffer := '';
+            end if;
+        end if;
+    end loop;
+    return FALSE; */
+end;
+/
+
+create or replace procedure post_with_word(WORD in varchar2) as
 begin
-	-- Récupération du text du post dans msg.
-	select
-		message into msg
-	from
-		Post
-	where
-		idpost = post;
+    select *
+    from Post
+    where word_parser(message) = TRUE
+    order by date_post desc;
+end;
+/
 
-	-- Parsing:
-	--  - Etat 0: Recherche du caractère '#'
-	--	- Etat 1: Récupération du hashtag dans buffer
-	for i in 1..length(msg) loop
-		c := substr(msg, i, 1);
-		if parser_state = 0 and c = '#' then
-			parser_state := 1;
-			buffer := '';
-		else
-			if parser_state = 1 and (c = ' ' or i = length(msg)-1) then
-				add_hashtag(buffer, post);
-				buffer := '';
-				parser_state := 0;
-			else
-				buffer := buffer || c;
-			end if;
-		end if;
-	end loop;
-
+-- R13
+create or replace procedure post_with_hashtag(HASHTAG in varchar2) as
+begin
+    select *
+    from Post
+    where idpost in (
+        select idpost 
+        from HasHashtag
+        where hashtag=HASHTAG)
+    order by date_post desc;
 end;
 /
