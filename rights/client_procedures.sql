@@ -1,6 +1,6 @@
 -- Renvoie 1 si le dernier post de l'utilisateur actuel date
 -- d'au moins deux secondes, 0 sinon.
-create or replace function is_post_cooldown_up return number as
+create or replace function is_post_cooldown_up return boolean as
 	max_date date := current_date;
 	delay number  := 0.0;
 begin
@@ -16,14 +16,14 @@ begin
 	delay := delay * 24 * 3600;
 
 	if delay > 2.0 then
-		return 1;
+		return TRUE;
 	else
-		return 0;
+		return FALSE;
 	end if;
 end;
 /
 
-create or replace procedure add_hashtag(hashtag IN varchar, post IN varchar) as
+create or replace procedure add_hashtag(hashtag IN varchar, post IN number) as
 	occurences number := 0;
 begin
 	select
@@ -40,7 +40,7 @@ end;
 
 -- Insère tous les mots précédés par un '#' dans la table 
 -- Hashtag.
-create or replace procedure parse_hashtags(post IN varchar) as
+create or replace procedure parse_hashtags(post IN number) as
 	msg varchar(280) := 'none';
 	parser_state number(1) := 0;
 	buffer varchar(140) := '';
@@ -112,7 +112,7 @@ end;
 create or replace procedure add_post(msg IN varchar, room IN varchar, building IN varchar) as
 	id varchar(32) := 'none';
 begin
-	if is_post_cooldown_up = 0 then
+	if is_post_cooldown_up = FALSE then
 		raise_application_error(-20589, 'Please wait at least 2 seconds before posting again.');
 	else
 		insert into Post values (new_idpost, msg, current_date, room, building, lower(user));
