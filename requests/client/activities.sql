@@ -146,12 +146,3 @@ begin
 end;
 /
 */
-
--- Droits d'éxécution des procédures/fonctions :
-grant execute on is_post_cooldown_up to client, moderator;
-grant execute on add_hashtag to client, moderator;
-grant execute on parse_hashtags to client, moderator;
-grant execute on new_idpost to client, moderator;
-grant execute on update_location to client, moderator;
-grant execute on add_post to client, moderator;
-grant execute on validate_draft to client, moderator;

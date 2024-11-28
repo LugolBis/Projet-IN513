@@ -1,4 +1,5 @@
 @model-definition/create_tables.sql
 @views/create_views.sql
 @constraints/create_constraints.sql
-@rights/grant_rights.sql
+@rights/create_users.sql
+@requests/create_requests.sql

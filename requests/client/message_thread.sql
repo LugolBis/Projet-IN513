@@ -28,6 +28,3 @@ begin
     end if;
 end;
 /
-
--- Droits d'éxécution des procédures/fonctions :
-grant execute on get_proportion_message to client, moderator;

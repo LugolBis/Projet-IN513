@@ -22,7 +22,3 @@ begin
     return RESULT;
 end;
 /
-
--- Droits d'éxécution des procédures/fonctions :
-grant execute on get_last_draft to client, moderator;
-grant execute on get_longest_draft to client, moderator;

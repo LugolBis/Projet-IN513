@@ -11,7 +11,6 @@ begin
 end;
 /
 
-
 /*
 DEPRECATED
 
@@ -45,16 +44,15 @@ WHERE Post.user = '[pseudo]';*/
 -- 3 - Est-ce que [pseudo] est suivi par au moins un des utilisateurs que je suis ?
 create or replace function get_linked_user(TARGET_USER in varchar2)
 return boolean as
-    RESULT boolean;
+    RESULT number(6);
 begin
-    SELECT EXISTS (
-        SELECT 1
-        FROM Follow AS F1
-        JOIN Follow AS F2 ON F1.follower = F2.pseudo
-        WHERE F1.pseudo = TARGET_USER AND F2.follower = lower(user)
-    ) INTO RESULT;
+    select count(*) into RESULT
+    from Follow F1, Follow F2
+    where F1.follower = F2.pseudo
+    and F1.pseudo = TARGET_USER
+    and F2.follower = lower(user);
 
-    return RESULT;
+    return RESULT > 0;
 end;
 /
 
@@ -132,14 +130,3 @@ GROUP BY Vote.user
 ORDER BY GREATEST(SUM(CASE WHEN Vote.value > 0 THEN 1 ELSE 0 END), 
                   SUM(CASE WHEN Vote.value < 0 THEN 1 ELSE 0 END)) DESC
 LIMIT 1; */
-
-
--- Droits d'éxécution des procédures/fonctions :
-grant execute on get_hashtag_used to client, moderator;
-grant execute on get_average_rank_post to client, moderator;
-grant execute on get_linked_user to client, moderator;
-grant execute on get_mutual_follower to client, moderator;
-grant execute on get_followers to client, moderator;
-grant execute on get_impostors to client, moderator;
-grant execute on get_fans to client, moderator;
-grant execute on get_haters to client, moderator;

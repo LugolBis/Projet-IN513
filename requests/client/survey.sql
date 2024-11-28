@@ -28,18 +28,24 @@ end;
 /
 
 -- R21 : Quel est le pourcentage d'uilisateur ayant choisi cette [option] à cette [question] ?
-create or replace function survey_result(TARGET_OPTION in varchar2, TARGET_SURVEY in varchar2)
+create or replace function survey_result(TARGET_OPTION in varchar2, TARGET_SURVEY in number)
 return number as
-    RESULT number(3);
+    VOTED number(3);
+    TOTAL_VOTERS number(7);
 begin
-    select count(*) into RESULT
+    select count(*) into VOTED
     from Options O, Survey S
     where O.idsurvey = S.idsurvey
     and O.content = TARGET_OPTION
-    and S.question = TARGET_SURVEY
+    and S.idsurvey = TARGET_SURVEY
     group by O.idoption;
 
-    return RESULT;
+    select count(*) into TOTAL_VOTERS
+    from Options O, Survey S
+    where O.idsurvey = S.idsurvey
+    and S.idsurvey = TARGET_SURVEY;
+
+    return VOTED/TOTAL_VOTERS;
 end;
 /
 
@@ -66,10 +72,3 @@ begin
      having count(distinct O.idoption) = ' || N;
 end;
 /
-
--- Droits d'éxécution des procédures/fonctions :
-grant execute on survey_with_word to client, moderator;
-grant execute on survey_option to client, moderator;
-grant execute on survey_result to client, moderator;
-grant execute on survey_tendance to client, moderator;
-grant execute on survey_option_number to client, moderator;

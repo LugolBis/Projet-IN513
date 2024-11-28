@@ -117,14 +117,3 @@ begin
      order by rank';
 end;
 /
-
--- Droits d'éxécution des procédures/fonctions :
-grant execute on get_post_target_user to client, moderator;
-grant execute on get_post_target_location to client, moderator;
-grant execute on get_post_time to client, moderator;
-grant execute on get_some_post to client, moderator;
-grant execute on word_parser to client, moderator;
-grant execute on post_with_word to client, moderator;
-grant execute on post_with_hashtag to client, moderator;
-grant execute on post_most_upvoted to client, moderator;
-grant execute on post_most_downvoted to client, moderator;
