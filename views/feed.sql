@@ -15,4 +15,4 @@ begin
 end;
 /
 
-grant execute on admin.get_feed to client;
+grant execute on admin.get_feed to client, moderator;

@@ -26,4 +26,4 @@ begin
 end;
 /
 
-grant execute on admin.get_influencer to client;
+grant execute on admin.get_influencer to client, moderator;

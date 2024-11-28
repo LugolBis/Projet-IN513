@@ -67,3 +67,8 @@ begin
     return DATE_RESULT;
 end;
 /
+
+-- Droits d'éxécution des procédures/fonctions :
+grant execute on get_post_hashtags_tendance to client, moderator;
+grant execute on get_proportion_hashtag to client, moderator;
+grant execute on get_hashtag_day to client, moderator;

@@ -60,7 +60,7 @@ end;
 
 -- R12 : Quels sont les posts contenant [WORD] ?
 
--- Fonction pour vérifier si un mot est contenu dans 
+-- Fonction pour vérifier si un mot est contenu dans la chaîne de caractère passée en entrée
 create or replace function word_parser(CONTENT in varchar2, WORD in varchar2) return boolean as
     RESULT boolean;
 begin
@@ -96,7 +96,7 @@ end;
 /
 
 -- R14 : Quels sont les posts les plus upvoté (ou downvoté) ?
-create or replace procedure post_most_upvote as
+create or replace procedure post_most_upvoted as
 begin
     execute immediate
     'select P.idpost, P.message, P.date_post, P.room, P.building, P.pseudo, count(*) as rank
@@ -107,7 +107,7 @@ begin
 end;
 /
 
-create or replace procedure post_most_downvote as
+create or replace procedure post_most_downvoted as
 begin
     execute immediate
     'select P.idpost, P.message, P.date_post, P.room, P.building, P.pseudo, count(*) as rank
@@ -117,3 +117,14 @@ begin
      order by rank';
 end;
 /
+
+-- Droits d'éxécution des procédures/fonctions :
+grant execute on get_post_target_user to client, moderator;
+grant execute on get_post_target_location to client, moderator;
+grant execute on get_post_time to client, moderator;
+grant execute on get_some_post to client, moderator;
+grant execute on word_parser to client, moderator;
+grant execute on post_with_word to client, moderator;
+grant execute on post_with_hashtag to client, moderator;
+grant execute on post_most_upvoted to client, moderator;
+grant execute on post_most_downvoted to client, moderator;

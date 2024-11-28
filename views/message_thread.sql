@@ -26,7 +26,7 @@ begin
 end;
 /
 
-grant execute on admin.get_message_thread to client;
+grant execute on admin.get_message_thread to client, moderator;
 
 /*
 DEPRECATED

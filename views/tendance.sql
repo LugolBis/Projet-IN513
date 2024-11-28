@@ -19,7 +19,7 @@ begin
 end;
 /
 
-grant execute on admin.get_tendance to client;
+grant execute on admin.get_tendance to client, moderator;
 
 /*
 DEPRECATED

@@ -66,3 +66,10 @@ begin
      having count(distinct O.idoption) = ' || N;
 end;
 /
+
+-- Droits d'éxécution des procédures/fonctions :
+grant execute on survey_with_word to client, moderator;
+grant execute on survey_option to client, moderator;
+grant execute on survey_result to client, moderator;
+grant execute on survey_tendance to client, moderator;
+grant execute on survey_option_number to client, moderator;

@@ -21,7 +21,7 @@ begin
 end;
 /
 
-grant execute on admin.get_rank_post to client;
+grant execute on admin.get_rank_post to client, moderator;
 
 /*
 DEPRECATED

@@ -16,4 +16,4 @@ begin
 end;
 /
 
-grant execute on admin.get_my_draft to client;
+grant execute on admin.get_my_draft to client, moderator;
