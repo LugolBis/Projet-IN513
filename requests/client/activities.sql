@@ -1,9 +1,20 @@
 -- Renvoie 1 si le dernier post de l'utilisateur actuel date
 -- d'au moins deux secondes, 0 sinon.
 create or replace function is_post_cooldown_up return boolean as
-	max_date date := current_date;
-	delay number  := 0.0;
+	max_date date     := current_date;
+	delay number      := 0.0;
+	post_count number := 0;
 begin
+
+	-- S'il n'y a aucun post, il n'y a pas de cooldown.
+	select
+		count(idpost) into post_count
+	from Post;
+
+	if post_count = 0 then
+		return TRUE;
+	end if;
+
 	select
 		max(date_post) into max_date
 	from

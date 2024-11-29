@@ -9,3 +9,4 @@ grant create procedure to admin;
 grant create user to admin;
 grant create trigger to admin;
 grant create view to admin;
+grant grant any role to admin;

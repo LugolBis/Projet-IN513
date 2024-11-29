@@ -18,7 +18,7 @@ begin
 	if mail_unicity(mail) = 0 then
 		insert into Users values (pseudo, null, null, mail, 'unknown', null, null, null);
 		execute immediate 'create user ' || pseudo || ' identified by ' || password;
-		execute immediate 'grant Client to ' || pseudo;
+		execute immediate 'grant client to ' || pseudo;
 	else
 		RAISE_APPLICATION_ERROR(-20589, 'The adress mail : ' || mail || ' is already used.');
 	end if;

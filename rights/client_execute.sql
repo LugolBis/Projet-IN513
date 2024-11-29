@@ -24,6 +24,7 @@ grant execute on get_hashtag_day to client, moderator;
 -- message_thread :
 
 grant execute on get_proportion_message to client, moderator;
+grant execute on send_message to client, moderator;
 
 -- post :
 

@@ -10,5 +10,5 @@ grant create view to client;
 
 -- Utilisateurs test, normalement les utilisateurs doivent
 -- être crées par l'admin.
-create user jean identified by pasteque;
-grant client to jean;
+call add_user('jean', 'jean@jean.fr', 'pasteque');
+call add_user('lola', 'lola@lola.fr', 'kiwi');
