@@ -1,36 +1,11 @@
 -- Procédure créant ou remplaçant la vue RankPost
 -- Vue modélisant les statistiques d'un post donné
 
--- /!\ PROCEDURE INSTABLE
-
-create or replace procedure get_rank_post(ID_POST in number) as
-begin
-   execute immediate
-   'create or replace view RankPost as
-    select sum(value) as rank,
-    (select sum(value) from Vote where idpost = ' || ID_POST || ' and value < 0 group by idpost) as downvotes,
-    (select sum(value) from Vote where idpost = ' || ID_POST || ' and value > 0 group by idpost) as upvotes
-    from Vote
-    where idpost = ' || ID_POST || '
-    group by idpost';
-   exception
-      when OTHERS then
-         if SQLCODE != -955 then
-            raise;
-         end if;
-end;
-/
-
-grant execute on admin.get_rank_post to client, moderator;
-
-/*
-DEPRECATED
-
-create view RankPost as
+create or replace view RankPost as
 select sum(value) as rank,
-    (select sum(value) from Vote where idpost=&ID_POST and value<0 group by idpost) as downvotes,
-    (select sum(value) from Vote where idpost=&ID_POST and value>0 group by idpost) as upvotes
+   sum(case when Vote.value > 0 then 0 else 1 end) as downvotes,
+   sum(case when Vote.value > 0 then 1 else 0 end) as upvotes
 from Vote
-where idpost=&ID_POST
 group by idpost;
-*/
+
+grant select on RankPost to client, moderator;

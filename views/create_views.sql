@@ -3,7 +3,6 @@
 
 -- /!\ ATTENTION ces fonctions créent les procédures pour permettant de créer les vues
 @views/feed.sql
-@views/message_thread.sql
 @views/my_draft.sql
 @views/rank_post.sql
 @views/sanctions.sql
@@ -11,4 +10,3 @@
 @views/top_user.sql
 @views/urgent_signal.sql
 @views/user_ranks.sql
-@views/influencer.sql
