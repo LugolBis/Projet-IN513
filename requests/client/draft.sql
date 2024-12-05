@@ -1,24 +1,9 @@
 -- R24 : Quel est le brouillon le plus récent que j'ai rédigé ?
-create or replace function get_last_draft return number as
-    RESULT number(5);
-begin
-    select max(iddraft) into RESULT
-    from Draft
-    where pseudo = lower(user);
+select message
+from MyDraft
+fetch first 1 rows only;
 
-    return RESULT;
-end;
-/
-
--- R25 : Quel est la proportion de messages envoyés/reçus entre [moi] et l'utilisateur [TARGET_USER] ?
-create or replace function get_longest_draft return varchar2 as
-    RESULT varchar2(280) := '';
-begin
-    select message into RESULT
-    from Draft
-    order by length(message) desc
-    fetch first 1 rows only;
-
-    return RESULT;
-end;
-/
+-- R?? : Quel est le draft (brouillon) le plus long que j'ai rédigé ?
+select message
+from MyDraft
+where length(message) = (select max(length(message)) from MyDraft);
