@@ -1,3 +1,23 @@
+-- Procedure pour ajouter un nouveau Survey
+create or replace procedure add_survey(QUESTION in varchar, ID_POST in number) as
+begin 
+    insert into Survey values(new_idsurvey, QUESTION, ID_POST);
+end;
+/
+
+-- Procedure pour ajouter une nouvelle Option à un Survey
+create or replace procedure add_option(CONTENT in varchar, ID_SURVEY in number) as
+begin 
+    insert into Options values(new_idoption, CONTENT, ID_SURVEY);
+end;
+/
+
+-- Procedure pour répondre a un Survey
+create or replace procedure add_answer(ID_OPTION in number) as
+begin
+    insert on Answer values(lower(user), ID_OPTION);
+end;
+/
 
 -- R19 : Quels sont les sondages contenant [mot] dans sa question ?
 select *
@@ -37,11 +57,17 @@ end;
 /
 
 -- R22 : Quels sont les sondages contenant le plus de votants ?
-select S.idsurvey, S.question, S.idpost, count(*) as nb_voters
-from Options O, Survey S
-where O.idsurvey = S.idsurvey
-group by S.idsurvey
-order by nb_voters desc;
+select S.idsurvey, S.question, S.idpost, NVL(RES.rank, 0) as rank 
+from Survey S
+left join (
+    select O.idsurvey as id, count(*) as rank
+    from Answer A 
+    left join Options O on A.idoption = O.idoption
+    group by O.idsurvey
+) RES
+on S.idsurvey = RES.id
+order by rank desc;
+
 
 -- R23 : Quels sont les sondages contenant [N] options ?
 select S.idsurvey, S.question, S.idpost

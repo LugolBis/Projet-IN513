@@ -24,6 +24,8 @@ from
 where
 	rownum <= 0.1 * get_user_count;
 
+grant select on Goat to client, moderator;
+
 create or replace view Influencer as select
 	pseudo, rank
 from
@@ -32,6 +34,8 @@ where
 	rownum > 0.1 * get_user_count and
 	rownum <= 0.5 * get_user_count;
 
+grant select on Influencer to client, moderator;
+
 create or replace view Nobody as select
 	pseudo, rank
 from
@@ -39,3 +43,4 @@ from
 where
 	rownum > 0.5 * get_user_count;
 
+grant select on Nobody to client, moderator;

@@ -110,6 +110,26 @@ begin
 end;
 /
 
+create or replace function new_idsurvey return number AS
+	RESULT number(6);
+begin
+	select NVL(max(idsurvey)+1, 0) into RESULT
+	from Survey;
+
+	return RESULT;
+end;
+/
+
+create or replace function new_idoption return number AS
+	RESULT number(6);
+begin
+	select NVL(max(idoption)+1, 0) into RESULT
+	from idOptions;
+
+	return RESULT;
+end;
+/
+
 -- Ajout de la location d'un post
 create or replace procedure update_location(room in varchar, buiding in varchar) as
 begin
@@ -139,21 +159,8 @@ begin
 end;
 /
 
-/*
-Seconde implémentation de la procedure validate_draft qui rendrait obsolète le trigger 'post_draft'
-
-create or replace procedure(id number, validate in boolean) as
-	MESSAGE varchar(280);
+create or replace procedure add_signal(TARGET_USER in varchar, ID_POST in number) as
 begin
-	if validate = TRUE then
-		select message into MESSAGE
-		from Draft
-		where iddraft = id;
-
-		user.add_post(MESSAGE, null, null);
-	else
-		delete from Daft where iddraft = :new.iddraft;
-	end if;
+	insert into Signal(TARGET_USER, ID_POST);
 end;
 /
-*/

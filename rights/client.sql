@@ -7,6 +7,8 @@ create role client;
 grant create session to client;
 grant create view to client;
 
+-- Droits de sélection sur certaines tables :
+grant select on Post, Survey, Options, Follow, Vote, Hashtag, HasHashtag to client;
 
 -- Utilisateurs test, normalement les utilisateurs doivent
 -- être crées par l'admin.

@@ -43,14 +43,24 @@ where idpost in (
 order by date_post desc;
 
 -- R14 : Quels sont les posts les plus upvoté (ou downvoté) ?
-select P.idpost, P.message, P.date_post, P.room, P.building, P.pseudo, count(V.pseudo) as rank
-from Post P, Vote V
-where P.idpost = V.idpost and V.value = 1
-group by P.idpost, P.message, P.date_post, P.room, P.building, P.pseudo
+select P.idpost, P.message, P.date_post, P.room, P.building, P.pseudo, NVL(V.rank, 0) as rank
+from Post P
+left join (
+    select V.idpost, count(V.pseudo) as rank
+    from Vote V
+    where V.value = 1
+    group by V.idpost
+) V
+on P.idpost = V.idpost
 order by rank desc;
 
-select P.idpost, P.message, P.date_post, P.room, P.building, P.pseudo, count(*) as rank
-from Post P, Vote V
-where P.idpost = V.idpost and V.value = -1
-group by P.idpost
+select P.idpost, P.message, P.date_post, P.room, P.building, P.pseudo, NVL(V.rank, 0) as rank
+from Post P
+left join (
+    select V.idpost, count(V.pseudo) as rank
+    from Vote V
+    where V.value = -1
+    group by V.idpost
+) V
+on P.idpost = V.idpost
 order by rank desc;
