@@ -1,0 +1,81 @@
+idpm,message,date,sender
+1,"I hope you are having a wonderful day.",2023-12-01 09:15:32,quirfy29
+2,"Thank you! I am doing well. How about you?",2023-12-01 09:30:45,smithjane
+3,"Did you see the latest updates on the project?",2023-12-02 11:05:12,mikej09
+4,"Yes, I reviewed them this morning.",2023-12-02 11:20:18,lindawil
+5,"Let’s meet tomorrow to finalize everything.",2023-12-03 14:50:25,brown_55
+6,"Sounds good. I’ll bring the presentation.",2023-12-03 15:10:40,susie88
+7,"Have you checked out the new feature?",2023-12-04 08:45:19,furyjams
+8,"Not yet. I’ll look into it this evening.",2023-12-04 09:05:37,maryd8
+9,"Can you send me the document by email?",2023-12-05 13:25:49,m_mart
+10,"Sure, I’ll forward it to you shortly.",2023-12-05 13:40:03,pattie23
+11,"What’s your favorite travel destination?",2023-12-06 18:15:21,david34mo
+12,"I love the mountains. How about you?",2023-12-06 18:30:29,barbwhite
+13,"Do you have any plans for the weekend?",2023-12-07 10:45:12,richeatay
+14,"I might go hiking. What about you?",2023-12-07 11:00:45,karenanna
+15,"Let’s catch up over coffee next week.",2023-12-08 09:30:17,joseph56t
+16,"Sure! Monday works for me.",2023-12-08 09:45:56,nancyj10
+17,"Did you finish the assignment already?",2023-12-09 14:10:34,charlttc
+18,"Yes, I submitted it this morning.",2023-12-09 14:25:48,lisa_lh
+19,"What do you think about the new policy changes?",2023-12-10 10:15:27,cmartinez
+20,"I think they will be beneficial in the long run.",2023-12-10 10:30:13,clarks
+21,"Can we reschedule the meeting to Thursday?",2023-12-11 16:20:42,quirfy29
+22,"Sure, Thursday works better for me too.",2023-12-11 16:35:19,smithjane
+23,"How was your weekend?",2023-12-12 08:50:32,mikej09
+24,"It was relaxing. How about yours?",2023-12-12 09:05:22,lindawil
+25,"Let’s collaborate on the next project.",2023-12-13 15:10:11,brown_55
+26,"That’s a great idea. Let’s discuss the details.",2023-12-13 15:25:49,susie88
+27,"Have you watched the new movie release?",2023-12-14 18:45:36,furyjams
+28,"Yes, it was fantastic. You should watch it.",2023-12-14 19:00:12,maryd8
+29,"Can you proofread my article draft?",2023-12-15 12:25:04,m_mart
+30,"Of course. Send it to me anytime.",2023-12-15 12:40:29,pattie23
+31,"What’s your favorite dish to cook?",2023-12-16 17:20:43,david34mo
+32,"I love cooking pasta. How about you?",2023-12-16 17:35:16,barbwhite
+33,"Do you think we should revise the timeline?",2023-12-17 09:40:22,richeatay
+34,"Yes, we might need an extra week to complete it.",2023-12-17 09:55:47,karenanna
+35,"Can you remind me of the meeting agenda?",2023-12-18 14:15:39,joseph56t
+36,"Sure, I’ll send it to you after lunch.",2023-12-18 14:30:21,nancyj10
+37,"What’s your favorite book genre?",2023-12-19 16:45:12,charlttc
+38,"I enjoy reading mystery novels. What about you?",2023-12-19 17:00:33,lisa_lh
+39,"Have you tried the new restaurant downtown?",2023-12-20 11:10:52,cmartinez
+40,"Not yet, but I’ve heard great reviews about it.",2023-12-20 11:25:18,clarks
+41,"What’s the best way to improve our workflow?",2023-12-21 10:05:14,quirfy29
+42,"We should focus on automating repetitive tasks.",2023-12-21 10:20:42,smithjane
+43,"Do you have any feedback on my presentation?",2023-12-22 15:35:19,mikej09
+44,"It was excellent. I really liked your approach.",2023-12-22 15:50:24,lindawil
+45,"Are you attending the conference next month?",2023-12-23 13:20:47,brown_55
+46,"Yes, I’ve already registered for it.",2023-12-23 13:35:55,susie88
+47,"Can we meet earlier to discuss the proposal?",2023-12-24 09:15:29,furyjams
+48,"Yes, let’s meet at 8:30 AM instead.",2023-12-24 09:30:11,maryd8
+49,"What are your thoughts on the current project status?",2023-12-25 14:40:22,m_mart
+50,"I think we’re on track to meet the deadlines.",2023-12-25 14:55:33,pattie23
+51,"Have you made your travel plans for the holidays?",2023-12-26 16:20:14,david34mo
+52,"Yes, I’ll be visiting my family.",2023-12-26 16:35:41,barbwhite
+53,"Can you join the team call tomorrow?",2023-12-27 11:10:57,richeatay
+54,"Yes, I’ll be available at that time.",2023-12-27 11:25:19,karenanna
+55,"What’s the best way to improve team collaboration?",2023-12-28 10:05:42,joseph56t
+56,"Regular communication and shared goals help a lot.",2023-12-28 10:20:31,nancyj10
+57,"Did you receive the latest project report?",2023-12-29 09:50:29,charlttc
+58,"Yes, I reviewed it this morning.",2023-12-29 10:05:14,lisa_lh
+59,"What’s your opinion on the new product launch?",2023-12-30 14:25:33,cmartinez
+60,"I think it’s innovative and has great potential.",2023-12-30 14:40:47,clarks
+61,"Can we extend the deadline for the submission?",2023-12-31 15:10:22,quirfy29
+62,"Yes, let’s push it by another week.",2023-12-31 15:25:38,smithjane
+63,"How do you plan to celebrate New Year’s Eve?",2024-01-01 17:30:25,mikej09
+64,"I’ll have a quiet evening at home with family.",2024-01-01 17:45:52,lindawil
+65,"Do you think we need to update the presentation slides?",2024-01-02 08:20:31,brown_55
+66,"Yes, I’ll work on them this afternoon.",2024-01-02 08:35:18,susie88
+67,"What’s your next travel destination?",2024-01-03 18:15:42,furyjams
+68,"I’m planning to visit Japan next summer.",2024-01-03 18:30:27,maryd8
+69,"Can we arrange a meeting next week?",2024-01-04 09:05:14,m_mart
+70,"Sure, let’s decide on a suitable time.",2024-01-04 09:20:22,pattie23
+71,"How do you stay motivated during tough times?",2024-01-05 14:40:36,david34mo
+72,"I focus on my goals and stay optimistic.",2024-01-05 14:55:41,barbwhite
+73,"What’s the best advice you’ve ever received?",2024-01-06 10:15:23,richeatay
+74,"Never stop learning and growing.",2024-01-06 10:30:42,karenanna
+75,"Are you free for a call later today?",2024-01-07 16:25:34,joseph56t
+76,"Yes, I’ll call you after 5 PM.",2024-01-07 16:40:59,nancyj10
+77,"What’s your favorite way to unwind?",2024-01-08 19:15:12,charlttc
+78,"I enjoy listening to music or reading books.",2024-01-08 19:30:44,lisa_lh
+79,"Can we finalize the details by tomorrow?",2024-01-09 13:10:22,cmartinez
+80,"Yes, I’ll send you my inputs tonight.",2024-01-09 13:25:15,clarks
