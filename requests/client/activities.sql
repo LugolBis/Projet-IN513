@@ -124,7 +124,7 @@ create or replace function new_idoption return number AS
 	RESULT number(6);
 begin
 	select NVL(max(idoption)+1, 0) into RESULT
-	from idOptions;
+	from Options;
 
 	return RESULT;
 end;
@@ -161,6 +161,6 @@ end;
 
 create or replace procedure add_signal(TARGET_USER in varchar, ID_POST in number) as
 begin
-	insert into Signal(TARGET_USER, ID_POST);
+	insert into Signal values(TARGET_USER, ID_POST);
 end;
 /

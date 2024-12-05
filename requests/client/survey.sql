@@ -15,7 +15,7 @@ end;
 -- Procedure pour répondre a un Survey
 create or replace procedure add_answer(ID_OPTION in number) as
 begin
-    insert on Answer values(lower(user), ID_OPTION);
+    insert into Answer values(lower(user), ID_OPTION);
 end;
 /
 
@@ -68,10 +68,12 @@ left join (
 on S.idsurvey = RES.id
 order by rank desc;
 
-
 -- R23 : Quels sont les sondages contenant [N] options ?
-select S.idsurvey, S.question, S.idpost
-from Options O, Survey S
-where O.idsurvey = S.idsurvey
-group by S.idsurvey
-having count(distinct O.idoption) = 2;
+select *
+from Survey
+where idsurvey in (
+    select idsurvey
+    from Options
+    group by idsurvey
+    having count(distinct idoption) = 2
+);
