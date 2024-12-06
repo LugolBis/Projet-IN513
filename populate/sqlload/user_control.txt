@@ -1,0 +1,13 @@
+LOAD DATA INFILE '../users.csv'
+INTO TABLE Users 
+FIELDS TERMINATED BY ',' TRAILING NULLCOLS
+(  	pseudo,
+    name,
+    surname,
+    mail,
+    IPaddress,
+    description,
+    ban_end date "YYYY-MM-DD",
+    ban_reason   
+)
+

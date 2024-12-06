@@ -46,3 +46,15 @@ begin
     end if; 
 end;
 /
+
+-- On ajoute un utilisateur de la BD à chaque insertion dans la table Users
+create or replace trigger user_creation before insert on Users for each row
+declare
+    PRAGMA AUTONOMOUS_TRANSACTION;
+begin
+    execute immediate 'alter session set "_oracle_script" = true';
+    execute immediate 'create user ' || :new.pseudo || ' identified by ' || 'changeme';
+    execute immediate 'grant client to ' || :new.pseudo;
+end;
+/
+
