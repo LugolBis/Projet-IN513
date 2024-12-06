@@ -6,4 +6,4 @@ where
 	pm.idpm = r.idpm and
 	(pm.sender = lower(user) or r.pseudo = lower(user));
 
-grant select on MyMessages to client, moderator;
+grant select, update, delete on MyMessages to client, moderator;
