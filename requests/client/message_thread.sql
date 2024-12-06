@@ -1,4 +1,18 @@
 -- R26 : Quelles sont mes dernières discussions privées ?
+select distinct pseudo
+from(
+	select a.pseudo as pseudo, a.date_send
+	from (
+		select recipient as pseudo, date_send
+		from MyMessages
+		where sender = lower(user)
+		union
+		select sender as pseudo, date_send
+		from MyMessages
+		where recipient = lower(user)
+	) a
+	order by a.date_send
+);
 
 -- R27 : Quelle est la proportion de messages envoyés/reçus entre [moi] et l'utilisateur [TARGET_USER] ?
 create or replace function get_proportion_message(TARGET_USER in varchar2)

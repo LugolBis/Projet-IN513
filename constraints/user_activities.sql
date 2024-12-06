@@ -37,10 +37,11 @@ end;
 /
 
 -- Un draft est posté, puis supprimé
-create or replace trigger post_draft before update of state on Draft for each row
+create or replace trigger post_draft after update of state on Draft for each row
 begin
     if :new.state = TRUE then
         add_post(:new.message, null, null);
+        delete from Draft where iddraft = :new.iddraft;
     else
         delete from Draft where iddraft = :new.iddraft;
     end if; 
@@ -62,7 +63,5 @@ end;
 create or replace trigger extract_hashtags after insert on Post for each row
 begin
     admin.parse_hashtags(:new.idpost);
-EXCEPTION
-    RAISE_APPLICATION_ERROR(-20030, 'Issue whit the trigger "extract_hashtags" on the post '|| :new.idpost || );
 end;
 /

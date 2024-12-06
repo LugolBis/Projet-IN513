@@ -1,5 +1,6 @@
 create or replace view MyMessages as select
-	pm.sender as sender, r.pseudo as recipient, pm.message
+	pm.sender as sender, r.pseudo as recipient, pm.message as message,
+	pm.date_send as date_send
 from
 	PrivateMessage pm, Receive r
 where

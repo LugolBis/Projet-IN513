@@ -87,26 +87,13 @@ begin
 end;
 /
 
-create or replace function new_idpost return number as
-	m_id number(6) := 0;
-	c_post number(6) := 0;
+create or replace function new_idpost return number AS
+	RESULT number(6);
 begin
-	select
-		count(idpost) into c_post
-	from
-		Post;
+	select NVL(max(idpost)+1, 0) into RESULT
+	from Post;
 
-	if c_post = 0 then
-		return 0;
-	else
-		select
-			max(idpost) into m_id
-		from
-			Post;
-
-		return m_id + 1;
-	end if;
-
+	return RESULT;
 end;
 /
 
@@ -159,6 +146,7 @@ begin
 end;
 /
 
+-- Permet à l'utilisateur de signaler un post
 create or replace procedure add_signal(TARGET_USER in varchar, ID_POST in number) as
 begin
 	insert into Signal values(TARGET_USER, ID_POST);
