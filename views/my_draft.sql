@@ -7,4 +7,4 @@ from Draft
 where pseudo = lower(user)
 order by iddraft desc;
 
-grant select on MyDraft to client, moderator;
+grant select, update, delete on MyDraft to client, moderator;

@@ -58,3 +58,11 @@ begin
 end;
 /
 
+-- Insertion automatique des hashtags d'un post
+create or replace trigger extract_hashtags after insert on Post for each row
+begin
+    admin.parse_hashtags(:new.idpost);
+EXCEPTION
+    RAISE_APPLICATION_ERROR(-20030, 'Issue whit the trigger "extract_hashtags" on the post '|| :new.idpost || );
+end;
+/
