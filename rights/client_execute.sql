@@ -11,10 +11,12 @@ grant execute on new_idoption to client, moderator;
 grant execute on update_location to client, moderator;
 grant execute on add_post to client, moderator;
 grant execute on validate_draft to client, moderator;
+grant execute on add_vote to client, moderator;
 
 -- hashtag :
 
 grant execute on get_proportion_hashtag to client, moderator;
+grant execute on max_frequency_hashtag to client, moderator;
 grant execute on get_hashtag_day to client, moderator;
 
 -- message_thread :

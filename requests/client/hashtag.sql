@@ -48,6 +48,31 @@ begin
 end;
 /
 
+-- R17 : Quel sont les hashtags les plus fréquemment postés avec le hashtag [a] ?
+create or replace function max_frequency_hashtag(HASHTAG in varchar)
+return number as
+    RESULT number(6);
+begin
+    select count(*) into RESULT
+    from HasHashtag h1, HasHashtag h2
+    where h1.idpost = h2.idpost
+    and h1.hashtag = 'Élection'
+    and h2.hashtag != 'Élection'
+    group by h2.hashtag;
+
+    return RESULT;
+end;
+/
+
+select h2.hashtag, count(*) as occurence
+from HasHashtag h1, HasHashtag h2
+where h1.idpost = h2.idpost
+and h1.hashtag = 'Élection'
+and h2.hashtag != 'Élection'
+group by h2.hashtag
+having occurence = max_frequency_hashtag('Élection')
+order by occurence desc;
+
 -- R18 : Quel est le jour durant lequel un hashtag [HASHTAG] a été le plus posté ?
 create or replace function get_hashtag_day(HASHTAG in varchar2) return date as
     DATE_RESULT date := SYSDATE;

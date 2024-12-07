@@ -152,3 +152,14 @@ begin
 	insert into Signal values(TARGET_USER, ID_POST);
 end;
 /
+
+-- Permet d'ajouter un nouveau vote 
+create or replace procedure add_vote(ID_POST in number, IS_LIKE in boolean) as
+begin
+	if IS_LIKE = TRUE then
+		insert into Vote values(lower(user),ID_POST,1);
+	else
+		insert into Vote values(lower(user),ID_POST,-1);
+	end if;
+end;
+/

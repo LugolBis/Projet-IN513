@@ -64,3 +64,9 @@ left join (
 ) V
 on P.idpost = V.idpost
 order by rank desc;
+
+-- Bonus : Quels sont les utilisateurs qui ont voté pour tous les posts
+select pseudo
+from Vote
+group by pseudo
+having count(idpost) = (select count(*) from Post);
