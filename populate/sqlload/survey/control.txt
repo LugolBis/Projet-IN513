@@ -1,0 +1,9 @@
+LOAD DATA INFILE '../survey.csv'
+INTO TABLE Survey 
+FIELDS TERMINATED BY ',' OPTIONALLY ENCLOSED BY '"' TRAILING NULLCOLS
+(
+    idsurvey,
+    question,
+    idpost
+)
+
