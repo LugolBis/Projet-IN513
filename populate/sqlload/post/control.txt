@@ -1,0 +1,12 @@
+LOAD DATA INFILE '../posts.csv'
+INTO TABLE Post 
+FIELDS TERMINATED BY ',' OPTIONALLY ENCLOSED BY '"' TRAILING NULLCOLS
+(
+    idpost,
+    message,
+    date_post date "YYYY-MM-DD",
+    room,
+    building,
+    pseudo
+)
+
