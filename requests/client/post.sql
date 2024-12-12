@@ -65,18 +65,6 @@ left join (
 on P.idpost = V.idpost
 order by rank desc;
 
--- Ajout de Vote
- Create or replace add_vote(pseudo in varchar, idpost in number,is_like in Boolean) as
- BEGIN 
-     if is_like = TRUE then
-        insert into Vote Values(pseudo,idpost,1);
-    else
-        insert into Vote Values(pseudo,idpost,-1);
-    END IF;
-END;
-/
-grant execute on add_vote No client;
-
 -- Bonus : Quels sont les utilisateurs qui ont voté pour tous les posts
 select pseudo
 from Vote

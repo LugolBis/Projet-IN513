@@ -56,8 +56,8 @@ begin
     select count(*) into RESULT
     from HasHashtag h1, HasHashtag h2
     where h1.idpost = h2.idpost
-    and h1.hashtag = 'Élection'
-    and h2.hashtag != 'Élection'
+    and h1.hashtag = HASHTAG
+    and h2.hashtag != HASHTAG
     group by h2.hashtag;
 
     return RESULT;
