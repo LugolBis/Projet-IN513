@@ -51,38 +51,33 @@ end;
 
 -- Insère tous les mots précédés par un '#' dans la table 
 -- Hashtag.
-create or replace procedure parse_hashtags(post IN number) as
-	msg varchar(280) := 'none';
+create or replace procedure parse_hashtags(post IN number, msg IN varchar) as
 	parser_state number(1) := 0;
 	buffer varchar(140) := '';
 	c varchar(1) := '_';
 begin
-	-- Récupération du text du post dans msg.
-	select
-		message into msg
-	from
-		Post
-	where
-		idpost = post;
 
 	-- Parsing:
 	--  - Etat 0: Recherche du caractère '#'
 	--	- Etat 1: Récupération du hashtag dans buffer
-	for i in 1..length(msg) loop
-		c := substr(msg, i, 1);
-		if parser_state = 0 and c = '#' then
-			parser_state := 1;
-			buffer := '';
-		else
-			if parser_state = 1 and (c = ' ' or i = length(msg)-1) then
-				add_hashtag(buffer, post);
+
+	if length(msg) > 1 then
+		for i in 1..length(msg) loop
+			c := substr(msg, i, 1);
+			if parser_state = 0 and c = '#' then
+				parser_state := 1;
 				buffer := '';
-				parser_state := 0;
 			else
-				buffer := buffer || c;
+				if parser_state = 1 and (c = ' ' or i = length(msg)-1) then
+					add_hashtag(buffer, post);
+					buffer := '';
+					parser_state := 0;
+				else
+					buffer := buffer || c;
+				end if;
 			end if;
-		end if;
-	end loop;
+		end loop;
+	end if;
 
 end;
 /
@@ -134,7 +129,6 @@ begin
 		raise_application_error(-20589, 'Please wait at least 2 seconds before posting again.');
 	else
 		insert into Post values (new_idpost, msg, current_date, room, building, lower(user));
-		parse_hashtags(id);
 	end if;
 end;
 /

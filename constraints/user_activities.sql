@@ -78,6 +78,6 @@ end;
 -- Insertion automatique des hashtags d'un post
 create or replace trigger extract_hashtags after insert on Post for each row
 begin
-    admin.parse_hashtags(:new.idpost);
+    admin.parse_hashtags(:new.idpost, :new.message);
 end;
 /
