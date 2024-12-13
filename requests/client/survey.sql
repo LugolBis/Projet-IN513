@@ -22,7 +22,7 @@ end;
 -- R19 : Quels sont les sondages contenant [mot] dans sa question ?
 select *
 from Survey
-where REGEXP_LIKE(question, 'Élection', 'i') = TRUE;
+where REGEXP_LIKE(question, 'genant', 'i') = TRUE;
 
 -- R20 : Quels sont les sondages contenant [mot] dans ces options ?
 -- Procedure instable

@@ -8,7 +8,13 @@ grant create session to client;
 grant create view to client;
 
 -- Droits de sélection sur certaines tables :
-grant select on Post, Survey, Options, Follow, Vote, Hashtag, HasHashtag to client;
+grant select on Post to client, moderator;
+grant select on Survey to client, moderator;
+grant select on Options to client, moderator;
+grant select on Follow to client, moderator;
+grant select on Vote to client, moderator;
+grant select on Hashtag to client, moderator;
+grant select on HasHashtag to client, moderator;
 
 -- Utilisateurs test, normalement les utilisateurs doivent
 -- être crées par l'admin.

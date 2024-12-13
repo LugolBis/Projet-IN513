@@ -4,11 +4,11 @@ from(
 	select a.pseudo as pseudo, a.date_send
 	from (
 		select recipient as pseudo, date_send
-		from MyMessages
+		from admin.MyMessages
 		where sender = lower(user)
 		union
 		select sender as pseudo, date_send
-		from MyMessages
+		from admin.MyMessages
 		where recipient = lower(user)
 	) a
 	order by a.date_send
