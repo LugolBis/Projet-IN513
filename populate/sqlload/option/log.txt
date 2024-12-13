@@ -1,13 +1,13 @@
 
-SQL*Loader: Release 23.0.0.0.0 - for Oracle Cloud and Engineered Systems on Fri Dec 13 10:06:18 2024
+SQL*Loader: Release 23.0.0.0.0 - for Oracle Cloud and Engineered Systems on Fri Dec 13 10:06:24 2024
 Version 23.5.0.24.07
 
 Copyright (c) 1982, 2024, Oracle and/or its affiliates.  All rights reserved.
 
-Control File:   survey/control.txt
-Data File:      ../survey.csv
-  Bad File:     survey/bad.txt
-  Discard File: survey/disard.txt 
+Control File:   option/control.txt
+Data File:      ../options.csv
+  Bad File:     option/bad.txt
+  Discard File: option/disard.txt 
  (Allow all discards)
 
 Number to load: ALL
@@ -17,19 +17,18 @@ Bind array:     250 rows, maximum of 1048576 bytes
 Continuation:    none specified
 Path used:      Conventional
 
-Table SURVEY, loaded from every logical record.
+Table OPTIONS, loaded from every logical record.
 Insert option in effect for this table: INSERT
-TRAILING NULLCOLS option in effect
 
    Column Name                  Position   Len  Term Encl Datatype
 ------------------------------ ---------- ----- ---- ---- ---------------------
-IDSURVEY                            FIRST     *   ,  O(") CHARACTER            
-QUESTION                             NEXT     *   ,  O(") CHARACTER            
-IDPOST                               NEXT     *   ,  O(") CHARACTER            
+IDOPTION                            FIRST     *   ,  O(") CHARACTER            
+CONTENT                              NEXT     *   ,  O(") CHARACTER            
+IDSURVEY                             NEXT     *   ,  O(") CHARACTER            
 
 
-Table SURVEY:
-  35 Rows successfully loaded.
+Table OPTIONS:
+  55 Rows successfully loaded.
   0 Rows not loaded due to data errors.
   0 Rows not loaded because all WHEN clauses were failed.
   0 Rows not loaded because all fields were null.
@@ -39,12 +38,12 @@ Space allocated for bind array:                 193500 bytes(250 rows)
 Read   buffer bytes: 1048576
 
 Total logical records skipped:          1
-Total logical records read:            35
+Total logical records read:            55
 Total logical records rejected:         0
 Total logical records discarded:        0
 
-Run began on Fri Dec 13 10:06:18 2024
+Run began on Fri Dec 13 10:06:24 2024
 Run ended on Fri Dec 13 10:06:24 2024
 
-Elapsed time was:     00:00:05.66
+Elapsed time was:     00:00:00.53
 CPU time was:         00:00:00.03

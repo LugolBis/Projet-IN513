@@ -1,0 +1,8 @@
+LOAD DATA INFILE '../options.csv'
+INTO TABLE Options
+FIELDS TERMINATED BY ',' OPTIONALLY ENCLOSED BY '"'
+(
+    idoption,
+    content,
+    idsurvey
+)
