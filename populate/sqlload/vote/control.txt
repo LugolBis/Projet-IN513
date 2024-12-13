@@ -1,0 +1,8 @@
+LOAD DATA INFILE '../new_vote.csv'
+INTO TABLE Vote
+FIELDS TERMINATED BY ',' TRAILING NULLCOLS
+(
+    pseudo,
+    idpost,
+    value
+)

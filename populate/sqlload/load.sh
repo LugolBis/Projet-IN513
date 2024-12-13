@@ -7,4 +7,5 @@
 # sqlldr userid=admin/banane control=post/control.txt log=post/log.txt bad=post/bad.txt discard=post/disard.txt errors=0 skip=0
 # sqlldr userid=admin/banane control=survey/control.txt log=survey/log.txt bad=survey/bad.txt discard=survey/disard.txt errors=0 skip=1
 # sqlldr userid=admin/banane control=option/control.txt log=option/log.txt bad=option/bad.txt discard=option/disard.txt errors=0 skip=1
-sqlldr userid=admin/banane control=answer/control.txt log=answer/log.txt bad=answer/bad.txt discard=answer/disard.txt errors=0 skip=1
+# sqlldr userid=admin/banane control=answer/control.txt log=answer/log.txt bad=answer/bad.txt discard=answer/disard.txt errors=0 skip=1
+sqlldr userid=admin/banane control=vote/control.txt log=vote/log.txt bad=vote/bad.txt discard=vote/disard.txt errors=0 skip=1

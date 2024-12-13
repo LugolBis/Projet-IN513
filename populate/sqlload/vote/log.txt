@@ -1,0 +1,50 @@
+
+SQL*Loader: Release 23.0.0.0.0 - for Oracle Cloud and Engineered Systems on Fri Dec 13 11:08:33 2024
+Version 23.5.0.24.07
+
+Copyright (c) 1982, 2024, Oracle and/or its affiliates.  All rights reserved.
+
+Control File:   vote/control.txt
+Data File:      ../new_vote.csv
+  Bad File:     vote/bad.txt
+  Discard File: vote/disard.txt 
+ (Allow all discards)
+
+Number to load: ALL
+Number to skip: 1
+Errors allowed: 0
+Bind array:     250 rows, maximum of 1048576 bytes
+Continuation:    none specified
+Path used:      Conventional
+
+Table VOTE, loaded from every logical record.
+Insert option in effect for this table: INSERT
+TRAILING NULLCOLS option in effect
+
+   Column Name                  Position   Len  Term Encl Datatype
+------------------------------ ---------- ----- ---- ---- ---------------------
+PSEUDO                              FIRST     *   ,       CHARACTER            
+IDPOST                               NEXT     *   ,       CHARACTER            
+VALUE                                NEXT     *   ,       CHARACTER            
+
+
+Table VOTE:
+  33 Rows successfully loaded.
+  0 Rows not loaded due to data errors.
+  0 Rows not loaded because all WHEN clauses were failed.
+  0 Rows not loaded because all fields were null.
+
+
+Space allocated for bind array:                 193500 bytes(250 rows)
+Read   buffer bytes: 1048576
+
+Total logical records skipped:          1
+Total logical records read:            33
+Total logical records rejected:         0
+Total logical records discarded:        0
+
+Run began on Fri Dec 13 11:08:33 2024
+Run ended on Fri Dec 13 11:08:33 2024
+
+Elapsed time was:     00:00:00.09
+CPU time was:         00:00:00.02

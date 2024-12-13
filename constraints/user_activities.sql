@@ -12,21 +12,6 @@ begin
 end;
 /
 
--- On empêche les utilisateurs de voter pour un post qui n'existe pas
-create or replace trigger vote_real before insert on Vote for each row
-declare
-    RESULT number(1);
-begin
-    select count(*) into RESULT
-    from Post
-    where idpost = :new.idpost
-    group by idpost;
-
-    if RESULT != 1 then
-        RAISE_APPLICATION_ERROR(-20030, '' || :new.pseudo || ' tried to vote to a non-existent post.');
-    end if;
-end;
-/
 
 -- On empêche les utilisateurs de s'envoyer des messages à eux même
 create or replace trigger recipient_self before insert on Receive for each row
