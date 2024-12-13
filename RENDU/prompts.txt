@@ -1,0 +1,171 @@
+Prompt n°1 :
+Mémorise l'implémentation des tables en SQL ci joint dans le script. Si tu as correctement mémorisé réponds moi "Ok !".
+*Joindre un script contenant la création des tables*
+
+Prompt n°2 :
+Mémorise l'implémentation des triggers de la BDD ci joint dans le script. Si tu as correctement mémorisé réponds moi "Ok !".
+*Joindre l'implémentation des triggers*
+
+Prompt n°3 :
+Mémorise l'implémentation des droits des divers utilisateurs accédant à la BDD ci joint dans le script. Si tu as correctement mémorisé réponds moi "Ok !".
+*Joindre l'implémentation des droits*
+
+Prompt n°4 :
+Mémorise l'implémentation des vues de la BDD ci joint dans le script. Si tu as correctement mémorisé réponds moi "Ok !".
+*Joindre l'implémentation des vues*
+
+Prompt n°5 :
+Génère 40 tuples pours la table Users, les éléments textuels sont générés aléatoirement et doivent ressembler a de vraies données.
+Parmis les 40 tuples une dizaine d'entre eux auront les champs ban_end et ban_reason remplis. Parmis les 40 tuples 25 d'entres eux auront une description. N'oublie pas de générer les données au format CSV.
+Serais tu capable de généré un pseudo de manière aléatoire en mélangeant les lettres des champs surname et name et en ajoutant éventuellement le symbol "_" ou des chiffres, pour les 40 utilisateurs ?
+Je ne veux pas que les utilisateurs aient tous le même nom basique "user". Par exemple un utilisateur pourrait s'appeller "lulu" ou encore "FoudreDeGuerre", etc.
+De plus modifie les description pour y ajouter quelques descriptions en Anglais et en Français.
+
+Prompt n°6 :
+Génère moi le contenu de la table Post au format CSV. je veux que tu génère 40 tuples, le champ idpost indiquera simplement le numéro de n ième tuple à être généré.
+Le message doit être une chaine de caractère comme les descriptions, mets des langues variées (Français, Espagnols, Anglais, Allemand, Italien), chacun d'entre eux doit être différent.
+Chaque message doit constituer une phrase cohérente. Parmis les 40 tuples, 25 d'entre eux auront 1 à 7 hashtags dans leur message (Un hashtag correspond au symbole '#' suivit d'un mot et d'un espace).
+Le champs date_post sera rempli avec une date au format "AAAA-MM-DD" (met bien les tirets et ce doit être une chaîne de caractères). Parmis les 40 tuples, 25 d'entres eux contiendrons soit l'indication du champs 'room', soit l'indication du champs 'building' ou les deux.
+Enfin le champs pseudo soit impérativement correspondre à un pseudo que tu viens de généré pour la table Users.
+
+Prompt n°7 :
+Génère 35 tuples pour la table Survey. Pour le champs idsurvey fait comme avec le champs idpost de la table Post.
+Pour le champs question tu dois générer de manière aléatoire 35 questions en anglais complètement différentes les une des autres.
+Pour le champs idpost récupère un idpost de la table Post de manière aléatoire et sans remise (je ne veux pas que plusieurs tuples aient le même idpost).
+
+Prompt n°8 :
+Génère 45 tuples pour la table Options tu va te baser sur la table Survey.
+Pour chaque tuple de la table survey tu vas générer entre 2 et 5 réponses cohérentes en fonction de la question posée dans chaque tuple de la table Survey
+(Pour chaque tuple de la table Survey tu génère 2 à 5 tuples options dont l'idoption est juste un banal compteur comme idpost, le champs content lui doit répondre à la question du tuple auquel il se réfère avec idsurvey).
+
+Prompt n°9 :
+Génère 80 tuples pour la table PrivateMessage. Sachant que idpm est un compteur comme idpost, message doit être une phrase cohérente (comme un post mais sans Hashtags).
+Les champs dates et sender doivent être cohérent de manière a simuler une véritable discussion.
+Exemple : "lulu" envoie : "Je t'aimes." à "juju" et "juju" lui REPOND "Moi aussi !", la date du tuple contenant le message de "lulu" doit être antérieure à celle du tuple du message de "juju", car celle ci lui REPOND.
+Un peu comme toi et mois qui avons une conversation, ce message que j'écris aura une date antérieur à ta réponse. N'oublie pas que le champs "sender" correspond au pseudo d'un utilisateur présent dans la table Users. Enfin je voudrai que 10 utilisateurs soient absent de la table.
+
+Prompt n°10 :
+Génère maintenant 80 tuples pour la table Receive qui simule qui à reçu chaque PrivateMessage, essaie de garder les discussion les plus cohérentes possible.
+
+Prompt n°11 :
+Peuple la table Follow avec 80 tuples de telle sorte que les champs pseudo et follower soient toujours différent et qu'ils soient tous deux des pseudo de la table Users.
+
+Prompt n°12 :
+Génère 35 tuples pour la table Draft. Le champs iddraft est fonctionne comme le champs idpost, le message doit être une phrase et le pseudo soit être inclut dans la table Users.
+
+Prompt n°13 :
+Génère 80 tuples pour la table Vote. Sachant que pseudo est un pseudo de la table Users, idpost doit être compris dans la table Post et value prend soit la valeur "-1" ou la valeur "1". De plus 15 tuples de la table Post  seront absent de la table Vote.
+
+Prompt n°14 :
+Génère 40 tuples pour la table Signal. Parmis ceux ci 31 tuples auront la même valeur de idpost. Fais en sorte que tous les pseudo soient unique.
+
+Prompt n°15 :
+Génère 80 tuples pour la table Answer (fait bien attention à ce que les clées étrangère existent dans leur tables respectives).
+
+Informations supplémentaires :
+- Modèle utilisé : Chat-GPT4o
+- Les données générés ont été retravaillées pour répondre aux enjeux des contraintes d'intégrité de la BDD et d'Oracle.
+  Pour retravailler les données nous avons utilisé Chat-GPT et Python.
+
+Répartition finale des tuples de chaque table :
+
+Users : 40
+Quelques exemples :
+quirfy29,John,Doe,john.doe@example.com,192.168.1.1,"Utilisateur actif sur le réseau social.",2024-12-15,"Violation of guidelines"
+smithjane,Jane,Smith,jane.smith@example.com,192.168.1.2,"Explorateur de hashtags tendance.",,
+mikej09,Mike,Johnson,mike.johnson@example.com,192.168.1.3,"Enjoying my time on this platform!",,
+
+Post : 40
+Quelques exemples :
+1,"The quick brown fox jumps over the lazy dog. #adventure #nature",2024-03-15,,,"quirfy29"
+2,"Un petit pas pour l homme, un grand pas pour l humanite. #espace",2024-07-22,,,"smithjane"
+3,"Caminante, no hay camino, se hace camino al andar. #cultura",2024-01-19,"RoomA","BuildingX","mikej09"
+
+Survey : 35
+Quelques exemples :
+1,"What is the best way to improve communication skills?",1
+2,"How do you define success in your own life?",2
+3,"What motivates you to wake up every morning?",3
+
+Options : 55
+Quelques exemples :
+1,"Spend more time communicating with others.",1
+2,"Practice active listening daily.",1
+3,"Set clear goals for personal achievements.",2
+
+PrivateMessage : 80
+Quelques exemples :
+1,"I hope you are having a wonderful day.",2023-12-01 09:15:32,quirfy29
+2,"Thank you! I am doing well. How about you?",2023-12-01 09:30:45,smithjane
+3,"Did you see the latest updates on the project?",2023-12-02 11:05:12,mikej09
+
+Receive : 80
+Quelques exemples :
+1,smithjane
+2,quirfy29
+3,lindawil
+
+Follow : 79
+Quelques exemples :
+quirfy29,smithjane
+mikej09,lindawil
+brown_55,susie88
+
+Draft : 35
+Quelques exemples :
+1,"The quick brown fox jumps over the lazy dog.",quirfy29
+2,"A journey of a thousand miles begins with a single step.",smithjane
+3,"Life is what happens when you're busy making other plans.",mikej09
+
+Vote : 33
+Quelques exemples :
+quirfy29,1,1
+smithjane,2,-1
+mikej09,3,1
+
+Signal : 40
+Quelques exemples :
+dorohills,5
+kennysco,5
+jadamsk,3
+
+Answer : 55
+Quelques exemples :
+quirfy29,1
+smithjane,2
+mikej09,3
+
+Hashtag : 40
+Quelques exemples (tuples extraits des posts) :
+adventure
+nature
+espace
+
+HasHashtag : 42
+Quelques exemples (tuples extraits des posts) :
+adventure, 1
+nature, 1
+espace, 2
+
+Insertion des données :
+
+1) Script SQL :
+insert into Users values('quirfy29','John','Doe','john.doe@example.com','192.168.1.1','Utilisateur actif sur le réseau social.',date '2024-12-15','Violation of guidelines');
+insert into Post values(1,'The quick brown fox jumps over the lazy dog. #adventure #nature',date '2024-03-15',null,null,'quirfy29');
+insert into Survey values(1,'What is the best way to improve communication skills?',1);
+
+2) SGL*LOAD :
+#!/bin/bash
+
+sqlldr userid=admin/banane control=user/control.txt log=user/log.txt bad=user/bad.txt discard=user/discard.txt errors=0 skip=1
+sqlldr userid=admin/banane control=post/control.txt log=post/log.txt bad=post/bad.txt discard=post/discard.txt errors=0 skip=0
+sqlldr userid=admin/banane control=survey/control.txt log=survey/log.txt bad=survey/bad.txt discard=survey/discard.txt errors=0 skip=1
+sqlldr userid=admin/banane control=option/control.txt log=option/log.txt bad=option/bad.txt discard=option/discard.txt errors=0 skip=1
+sqlldr userid=admin/banane control=answer/control.txt log=answer/log.txt bad=answer/bad.txt discard=answer/discard.txt errors=0 skip=1
+sqlldr userid=admin/banane control=vote/control.txt log=vote/log.txt bad=vote/bad.txt discard=vote/discard.txt errors=0 skip=1
+sqlldr userid=admin/banane control=private_message/control.txt log=private_message/log.txt bad=private_message/bad.txt discard=private_message/discard.txt errors=0 skip=1
+sqlldr userid=admin/banane control=receive/control.txt log=receive/log.txt bad=receive/bad.txt discard=receive/discard.txt errors=0 skip=1
+sqlldr userid=admin/banane control=signal/control.txt log=signal/log.txt bad=signal/bad.txt discard=signal/discard.txt errors=0 skip=1
+sqlldr userid=admin/banane control=draft/control.txt log=draft/log.txt bad=draft/bad.txt discard=draft/discard.txt errors=0 skip=1
+sqlldr userid=admin/banane control=follow/control.txt log=follow/log.txt bad=follow/bad.txt discard=follow/discard.txt errors=0 skip=1
+
