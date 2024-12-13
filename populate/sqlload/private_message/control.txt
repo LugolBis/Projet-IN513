@@ -1,0 +1,9 @@
+LOAD DATA INFILE '../private_message.csv'
+INTO TABLE PrivateMessage
+FIELDS TERMINATED BY ',' OPTIONALLY ENCLOSED BY '"' TRAILING NULLCOLS
+(
+    idpm,
+    message,
+    date_send date 'YYYY-MM-DD HH24-MI-SS',
+    sender
+)

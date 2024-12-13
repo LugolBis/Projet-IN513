@@ -1,0 +1,7 @@
+LOAD DATA INFILE '../receive.csv'
+INTO TABLE Receive
+FIELDS TERMINATED BY ',' OPTIONALLY ENCLOSED BY '"' TRAILING NULLCOLS
+(
+    idpm,
+    pseudo
+)
