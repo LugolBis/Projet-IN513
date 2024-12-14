@@ -1,0 +1,15 @@
+-- Renvoie la liste de tous les utilisateurs de la BDD
+select username
+from all_users
+where username not in (
+    'SYS', 'SYSTEM', 'OUTLN', 'DBSNMP', 'MGMT_VIEW', 'APPQOSSYS',
+    'AUDSYS', 'CTXSYS', 'DVSYS', 'FLOWS_FILES', 'MDDATA', 'MDSYS',
+    'ORDDATA', 'ORDSYS', 'XDB', 'WMSYS', 'LBACSYS', 'OLAPSYS',
+    'OWBSYS', 'SPATIAL_CSW_ADMIN_USR', 'SPATIAL_WFS_ADMIN_USR',
+    'SI_INFORMTN_SCHEMA', 'ANONYMOUS', 'APEX_PUBLIC_USER', 'VECSYS',
+    'APEX_040000', 'APEX_050000', 'DIP', 'GSMADMIN_INTERNAL',
+    'GSMCATUSER', 'GSMUSER', 'REMOTE_SCHEDULER_AGENT', 'SYSRAC',
+    'XS$NULL', 'OJVMSYS', 'DBSFWUSER', 'DGPDB_INT', 'DVF', 'GGSHAREDCAP',
+    'GGSYS', 'GSMROOTUSER', 'SYSBACKUP', 'SYSDG', 'SYSKM', 'SYS$UMF'
+)
+order by username;
