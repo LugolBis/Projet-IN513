@@ -11,10 +11,12 @@ grant create view to client;
 grant select on Post to client, moderator;
 grant select on Survey to client, moderator;
 grant select on Options to client, moderator;
+grant select on Answer to client, moderator;
 grant select on Follow to client, moderator;
 grant select on Vote to client, moderator;
 grant select on Hashtag to client, moderator;
 grant select on HasHashtag to client, moderator;
+
 
 -- Utilisateurs test, normalement les utilisateurs doivent
 -- être crées par l'admin.

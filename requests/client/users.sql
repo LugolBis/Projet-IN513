@@ -2,7 +2,7 @@
 
 -- 1 - Quelle est la liste des hashtags utilisés par [TARGET_USER] ?
 select distinct HH.hashtag
-from HasHashtag HH, Post P
+from admin.HasHashtag HH, admin.Post P
 where HH.idpost = P.idpost
 and P.pseudo = 'lulu';
 
@@ -26,7 +26,7 @@ return boolean as
     RESULT number(6);
 begin
     select count(*) into RESULT
-    from Follow F1, Follow F2
+    from admin.Follow F1, admin.Follow F2
     where F1.follower = F2.pseudo
     and F1.pseudo = TARGET_USER
     and F2.follower = lower(user);
@@ -37,25 +37,25 @@ end;
 
 -- 4 - Quels sont les utilisateurs que je suis et qui me suivent ?
 SELECT F1.follower AS mutual_follow
-FROM Follow F1, Follow F2
+FROM admin.Follow F1, admin.Follow F2
 WHERE F1.follower = F2.pseudo
 AND F1.pseudo = lower(user) AND F2.follower = lower(user);
 
 -- 5 - Quels sont les utilisateurs qui suivent [pseudo] ET qui sont suivis par [pseudo] ?
 SELECT F1.follower AS mutual_follow
-FROM Follow F1
-JOIN Follow F2 ON F1.follower = F2.pseudo
+FROM admin.Follow F1
+JOIN admin.Follow F2 ON F1.follower = F2.pseudo
 WHERE F1.pseudo = 'jojo' AND F2.follower = 'lulu';
 
 -- 6 - Quels sont les utilisateurs que je suis mais qui ne me suivent pas ?
 SELECT F1.follower AS not_following_back
-FROM Follow F1
-LEFT JOIN Follow F2 ON F1.follower = F2.pseudo AND F2.follower = lower(user)
+FROM admin.Follow F1
+LEFT JOIN admin.Follow F2 ON F1.follower = F2.pseudo AND F2.follower = lower(user)
 WHERE F1.pseudo = lower(user) AND F2.pseudo IS NULL;
 
 -- 7 - Quel est l'utilisateur qui approuve/désapprouve le plus de mes posts ?
 select V.pseudo, sum(V.value) as upvotes
-from Vote V, Post P
+from admin.Vote V, admin.Post P
 where V.idpost = P.idpost
 and V.value > 0 and P.pseudo = lower(user)
 group by V.pseudo
@@ -63,7 +63,7 @@ having upvotes > 0
 order by upvotes desc;
 
 select V.pseudo, sum(V.value) as downvotes
-from Vote V, Post P
+from admin.Vote V, admin.Post P
 where V.idpost = P.idpost
 and V.value < 0 and P.pseudo = lower(user)
 group by V.pseudo
