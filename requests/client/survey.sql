@@ -21,15 +21,15 @@ end;
 
 -- R19 : Quels sont les sondages contenant [mot] dans sa question ?
 select *
-from Survey
+from admin.Survey
 where REGEXP_LIKE(question, 'genant', 'i') = TRUE;
 
 -- R20 : Quels sont les sondages contenant [mot] dans ces options ?
 select *
-from Survey
+from admin.Survey
 where idsurvey in (
     select idsurvey
-    from Options
+    from admin.Options
     where REGEXP_LIKE(content, 'Oui', 'i') = TRUE
 );
 
@@ -57,11 +57,11 @@ end;
 
 -- R22 : Quels sont les sondages contenant le plus de votants ?
 select S.idsurvey, S.question, S.idpost, NVL(RES.rank, 0) as rank 
-from Survey S
+from admin.Survey S
 left join (
     select O.idsurvey as id, count(*) as rank
-    from Answer A 
-    left join Options O on A.idoption = O.idoption
+    from admin.Answer A 
+    left join admin.Options O on A.idoption = O.idoption
     group by O.idsurvey
 ) RES
 on S.idsurvey = RES.id
@@ -69,10 +69,10 @@ order by rank desc;
 
 -- R23 : Quels sont les sondages contenant [N] options ?
 select *
-from Survey
+from admin.Survey
 where idsurvey in (
     select idsurvey
-    from Options
+    from admin.Options
     group by idsurvey
     having count(distinct idoption) = 2
 );
