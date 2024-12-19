@@ -384,7 +384,7 @@ h1:after {
 <script src="https://cdn.rawgit.com/google/code-prettify/master/loader/run_prettify.js"></script>
 
 <h1>Rendu phase 2 IN513</h1>
-<p>DESMARRES Loïc<br>
+<p>DESMARES Loïc<br>
 Création des tables, de vues, rédaction de triggers/procédures/fonctions, requêtes d'exemples, prompt engineering, debugging sur VM et écriture des scripts de méta-données.
 <br><br>
 GHARIB ALI BARURA Sama<br>
@@ -1485,7 +1485,7 @@ end;
 /
 
 -- Droits d'éxécution des procédures/fonctions :
-grant execute on get_IPadress to client, moderator;
+grant execute on get_IPadress to moderator;
 </code></pre>
 <h3>client</h3>
 <h4>post.sql</h4>
@@ -2023,7 +2023,6 @@ from admin.Survey
 where REGEXP_LIKE(question, 'genant', 'i') = TRUE;
 
 -- R20 : Quels sont les sondages contenant [mot] dans ces options ?
--- Procedure instable
 select *
 from admin.Survey
 where idsurvey in (
@@ -2322,7 +2321,9 @@ grant create view to moderator;
 -- Ajouter l'accès aux procédures ici
 grant execute on admin.add_user to moderator;
 
-grant select on Post, Survey, Options, Follow, Vote, Hashtag, HasHashtag to moderator;
+grant delete on Post to moderator;
+grant delete on Survey to moderator;
+grant update (date_end, ban_reason) on Users to moderator;
 
 -- Moderateurs test, normalement les moderateurs doivent
 -- être crées par l'admin.
