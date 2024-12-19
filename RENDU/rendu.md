@@ -1,14 +1,158 @@
-# Projet IN-5013, Phase 2 
-## build_database.sql
+# Rendu phase 2 IN513
+
+DESMARRES Loïc
+GHARIB ALI BARURA Sama
+BERRHAMAN Aissam
+
+## A/ Création du schéma de la base de données
+### vote.sql
 ```
-@model-definition/create_tables.sql
-@views/create_views.sql
-@rights/create_users.sql
-@requests/create_requests.sql
-@constraints/user_activities.sql
-@constraints/user_ban.sql
+-- Création de la table
+create table Vote(
+    pseudo varchar(15),
+    idpost number(6),
+    value Number(1) not null,
+    primary key (pseudo, idpost),
+    foreign key (pseudo) references Users(pseudo) on delete cascade,
+    foreign key (idpost) references Post(idpost) on delete cascade
+);
 ```
-## RENDU
+### user.sql
+```
+-- Création de la table
+create table Users (
+    pseudo varchar(15) primary key,
+    name varchar(30),
+    surname varchar(30),
+    mail varchar(64) not null,
+    IPaddress varchar(15) not null,
+    description varchar(160),
+    ban_end date,
+    ban_reason varchar(160)
+);
+```
+### survey.sql
+```
+-- Création de la table
+create table Survey(
+    idsurvey Number(6) primary key,
+    question varchar(280) not null,
+    idpost number(6),
+    foreign key (idpost) references Post(idpost) on delete cascade
+);
+```
+### signal.sql
+```
+-- Création de la table
+create table Signal(
+    pseudo varchar(15),
+    idpost number(6),
+    primary key (pseudo, idpost),
+    foreign key (pseudo) references Users(pseudo) on delete cascade,
+    foreign key (idpost) references Post(idpost) on delete cascade
+);
+```
+### receive.sql
+```
+-- Création de la table
+create table Receive(
+    idpm Number(6),
+    pseudo varchar(15),
+    primary key (idpm, pseudo),
+    foreign key (pseudo) references Users(pseudo) on delete cascade
+);
+```
+### private_message.sql
+```
+-- Création de la table
+create table PrivateMessage(
+    idpm Number(6) primary key,
+    message varchar(280) not null,
+    date_send date not null,
+    sender varchar(15),
+    foreign key (sender) references Users(pseudo) on delete cascade
+);
+```
+### post.sql
+```
+-- Création de la table
+create table Post (
+    idpost number(6) primary key,
+    message varchar(280) not null,
+    date_post date not null,
+    room varchar(20),
+    building varchar(20),
+    pseudo varchar(15),
+    foreign key (pseudo) references Users(pseudo) on delete cascade
+);
+```
+### option.sql
+```
+-- Création de la table
+create table Options(
+    idoption Number(6) primary key,
+    content varchar(150) not null,
+    idsurvey Number(6),
+    foreign key (idsurvey) references Survey(idsurvey) on delete cascade
+);
+```
+### hashtag.sql
+```
+-- Création de la table
+create table Hashtag(
+    content varchar(140) primary key
+);
+```
+### has_hashtag.sql
+```
+-- Création de la table
+create table HasHashtag(
+    idpost number(6),
+    hashtag varchar(140),
+    primary key (idpost, hashtag),
+    foreign key (idpost) references Post(idpost) on delete cascade,
+    foreign key (hashtag) references Hashtag(content) on delete cascade
+);
+```
+### follow.sql
+```
+-- Création de la table
+create table Follow(
+    -- pseudo référence le pseudo d'un utilisateur
+    pseudo varchar(15),
+    -- follower référence le ou les utilisateur(s) qui suivent 'pseudo'             
+    follower varchar(15),
+    primary key (pseudo, follower),
+    foreign key (pseudo) references Users(pseudo) on delete cascade,
+    foreign key (follower) references Users(pseudo) on delete cascade
+);
+
+alter table Follow add constraint follow_self check (pseudo!=follower);
+```
+### draft.sql
+```
+-- Création de la table
+create table Draft(
+    iddraft Number(5) primary key,
+    message varchar(280),
+    pseudo varchar(15),
+    state boolean,
+    foreign key (pseudo) references Users(pseudo) on delete cascade
+);
+```
+### answer.sql
+```
+-- Création de la table
+create table Answer(
+    pseudo varchar(15),
+    idoption Number(6),
+    primary key (pseudo, idoption),
+    foreign key (pseudo) references Users(pseudo) on delete cascade,
+    foreign key (idoption) references Options(idoption) on delete cascade
+);
+```
+
+## B/ Jeu de données
 ### prompts.txt
 ```
 Prompt n°1 :
@@ -160,296 +304,54 @@ adventure, 1
 nature, 1
 espace, 2
 
-Insertion des données :
+```
 
-1) Script SQL :
+### insertions.sql
+```
 insert into Users values('quirfy29','John','Doe','john.doe@example.com','192.168.1.1','Utilisateur actif sur le réseau social.',date '2024-12-15','Violation of guidelines');
 insert into Post values(1,'The quick brown fox jumps over the lazy dog. #adventure #nature',date '2024-03-15',null,null,'quirfy29');
 insert into Survey values(1,'What is the best way to improve communication skills?',1);
 
-2) SGL*LOAD :
-#!/bin/bash
-
-sqlldr userid=admin/banane control=user/control.txt log=user/log.txt bad=user/bad.txt discard=user/discard.txt errors=0 skip=1
-sqlldr userid=admin/banane control=post/control.txt log=post/log.txt bad=post/bad.txt discard=post/discard.txt errors=0 skip=0
-sqlldr userid=admin/banane control=survey/control.txt log=survey/log.txt bad=survey/bad.txt discard=survey/discard.txt errors=0 skip=1
-sqlldr userid=admin/banane control=option/control.txt log=option/log.txt bad=option/bad.txt discard=option/discard.txt errors=0 skip=1
-sqlldr userid=admin/banane control=answer/control.txt log=answer/log.txt bad=answer/bad.txt discard=answer/discard.txt errors=0 skip=1
-sqlldr userid=admin/banane control=vote/control.txt log=vote/log.txt bad=vote/bad.txt discard=vote/discard.txt errors=0 skip=1
-sqlldr userid=admin/banane control=private_message/control.txt log=private_message/log.txt bad=private_message/bad.txt discard=private_message/discard.txt errors=0 skip=1
-sqlldr userid=admin/banane control=receive/control.txt log=receive/log.txt bad=receive/bad.txt discard=receive/discard.txt errors=0 skip=1
-sqlldr userid=admin/banane control=signal/control.txt log=signal/log.txt bad=signal/bad.txt discard=signal/discard.txt errors=0 skip=1
-sqlldr userid=admin/banane control=draft/control.txt log=draft/log.txt bad=draft/bad.txt discard=draft/discard.txt errors=0 skip=1
-sqlldr userid=admin/banane control=follow/control.txt log=follow/log.txt bad=follow/bad.txt discard=follow/discard.txt errors=0 skip=1
-
-
 ```
-### A.sql
+### vote.csv
 ```
--- Création du schéma de la BDD
-
--- Suppression des tables :
-
--- HasHashtag
-begin
-   EXECUTE IMMEDIATE 'DROP TABLE HasHashtag';
-EXCEPTION
-   when OTHERS then
-        if SQLCODE != -942 then
-         RAISE;
-        end if;
-end;
-/
-
--- Hashtag
-begin
-   EXECUTE IMMEDIATE 'DROP TABLE Hashtag';
-EXCEPTION
-   when OTHERS then
-        if SQLCODE != -942 then
-         RAISE;
-        end if;
-end;
-/
-
--- Answer
-begin
-   EXECUTE IMMEDIATE 'DROP TABLE Answer';
-EXCEPTION
-   when OTHERS then
-        if SQLCODE != -942 then
-         RAISE;
-        end if;
-end;
-/
-
--- Signal
-begin
-   EXECUTE IMMEDIATE 'DROP TABLE Signal';
-EXCEPTION
-   when OTHERS then
-        if SQLCODE != -942 then
-         RAISE;
-        end if;
-end;
-/
-
--- Vote
-begin
-   EXECUTE IMMEDIATE 'DROP TABLE Vote';
-EXCEPTION
-   when OTHERS then
-        if SQLCODE != -942 then
-         RAISE;
-        end if;
-end;
-/
-
--- Draft
-begin
-   EXECUTE IMMEDIATE 'DROP TABLE Draft';
-EXCEPTION
-   when OTHERS then
-        if SQLCODE != -942 then
-         RAISE;
-        end if;
-end;
-/
-
--- Follow
-begin
-   EXECUTE IMMEDIATE 'DROP TABLE Follow';
-EXCEPTION
-   when OTHERS then
-        if SQLCODE != -942 then
-         RAISE;
-        end if;
-end;
-/
-
--- Receive
-begin
-   EXECUTE IMMEDIATE 'DROP TABLE Receive';
-EXCEPTION
-   when OTHERS then
-        if SQLCODE != -942 then
-         RAISE;
-        end if;
-end;
-/
-
--- PrivateMessage
-begin
-   EXECUTE IMMEDIATE 'DROP TABLE PrivateMessage';
-EXCEPTION
-   when OTHERS then
-        if SQLCODE != -942 then
-         RAISE;
-        end if;
-end;
-/
-
--- Options
-begin
-   EXECUTE IMMEDIATE 'DROP TABLE Options';
-EXCEPTION
-   when OTHERS then
-        if SQLCODE != -942 then
-         RAISE;
-        end if;
-end;
-/
-
--- Survey
-begin
-   EXECUTE IMMEDIATE 'DROP TABLE Survey';
-EXCEPTION
-   when OTHERS then
-        if SQLCODE != -942 then
-         RAISE;
-        end if;
-end;
-/
-
--- Post
-begin
-   EXECUTE IMMEDIATE 'DROP TABLE Post';
-EXCEPTION
-   when OTHERS then
-        if SQLCODE != -942 then
-         RAISE;
-        end if;
-end;
-/
-
--- Users
-begin
-   EXECUTE IMMEDIATE 'DROP TABLE Users';
-EXCEPTION
-   when OTHERS then
-        if SQLCODE != -942 then
-         RAISE;
-        end if;
-end;
-/
-
--- Création des tables :
-
-create table Users (
-    pseudo varchar(15) primary key,
-    name varchar(30),
-    surname varchar(30),
-    mail varchar(64) not null,
-    IPaddress varchar(15) not null,
-    description varchar(160),
-    ban_end date,
-    ban_reason varchar(160)
-);
-
-create table Post (
-    idpost number(6) primary key,
-    message varchar(280) not null,
-    date_post date not null,
-    room varchar(20),
-    building varchar(20),
-    pseudo varchar(15),
-    foreign key (pseudo) references Users(pseudo) on delete cascade
-);
-
-create table Survey(
-    idsurvey Number(6) primary key,
-    question varchar(280) not null,
-    idpost number(6),
-    foreign key (idpost) references Post(idpost) on delete cascade
-);
-
-create table Options(
-    idoption Number(6) primary key,
-    content varchar(150) not null,
-    idsurvey Number(6),
-    foreign key (idsurvey) references Survey(idsurvey) on delete cascade
-);
-
-create table PrivateMessage(
-    idpm Number(6) primary key,
-    message varchar(280) not null,
-    date_send date not null,
-    sender varchar(15),
-    foreign key (sender) references Users(pseudo) on delete cascade
-);
-
-create table Receive(
-    idpm Number(6),
-    pseudo varchar(15),
-    primary key (idpm, pseudo),
-    foreign key (pseudo) references Users(pseudo) on delete cascade
-);
-
-create table Follow(
-    -- pseudo référence le pseudo d'un utilisateur
-    pseudo varchar(15),
-    -- follower référence le ou les utilisateur(s) qui suivent 'pseudo'             
-    follower varchar(15),
-    primary key (pseudo, follower),
-    foreign key (pseudo) references Users(pseudo) on delete cascade,
-    foreign key (follower) references Users(pseudo) on delete cascade
-);
-
-alter table Follow add constraint follow_self check (pseudo!=follower);
-
-create table Draft(
-    iddraft Number(5) primary key,
-    message varchar(280),
-    pseudo varchar(15),
-    state boolean,
-    foreign key (pseudo) references Users(pseudo) on delete cascade
-);
-
-create table Vote(
-    pseudo varchar(15),
-    idpost number(6),
-    value Number(1) not null,
-    primary key (pseudo, idpost),
-    foreign key (pseudo) references Users(pseudo) on delete cascade,
-    foreign key (idpost) references Post(idpost) on delete cascade
-);
-
-create table Signal(
-    pseudo varchar(15),
-    idpost number(6),
-    primary key (pseudo, idpost),
-    foreign key (pseudo) references Users(pseudo) on delete cascade,
-    foreign key (idpost) references Post(idpost) on delete cascade
-);
-
-create table Answer(
-    pseudo varchar(15),
-    idoption Number(6),
-    primary key (pseudo, idoption),
-    foreign key (pseudo) references Users(pseudo) on delete cascade,
-    foreign key (idoption) references Options(idoption) on delete cascade
-);
-
-create table Hashtag(
-    content varchar(140) primary key
-);
-
-create table HasHashtag(
-    idpost number(6),
-    hashtag varchar(140),
-    primary key (idpost, hashtag),
-    foreign key (idpost) references Post(idpost) on delete cascade,
-    foreign key (hashtag) references Hashtag(content) on delete cascade
-);
+pseudo, idpost, valute
+quirfy29,31,-1
+smithjane,39,-1
+mikej09,18,1
+lindawil,33,1
+brown_55,30,1
+susie88,7,1
+furyjams,32,-1
+maryd8,34,-1
+m_mart,17,1
+pattie23,34,1
+david34mo,37,-1
+barbwhite,8,1
+richeatay,34,-1
+karenanna,3,-1
+joseph56t,31,-1
+nancyj10,8,1
+charlttc,2,1
+lisa_lh,27,-1
+cmartinez,12,-1
+clarks,20,-1
+danl33,21,-1
+walkerem,15,-1
+phall92,31,-1
+angieall,39,1
+keviny25,4,1
+dhernz,27,1
+markkings,37,1
+mwright45,15,-1
+donaldlop,14,1
+dorohills,27,-1
+quirfy29,5,1
+smithjane,15,-1
+mikej09,25,1
 ```
-## populate
-### sqlload
+### SQL\*Load
 #### follow
-##### bad.txt
-```
-maryd8,furyjams
-
-```
 ##### control.txt
 ```
 LOAD DATA INFILE '../follow.csv'
@@ -497,11 +399,6 @@ FIELDS TERMINATED BY ',' OPTIONALLY ENCLOSED BY '"' TRAILING NULLCOLS
 
 ```
 #### private_message
-##### bad.txt
-```
-1,"I hope you are having a wonderful day.",2023-12-01 09:15:32,quirfy29
-
-```
 ##### control.txt
 ```
 LOAD DATA INFILE '../private_message.csv'
@@ -516,11 +413,6 @@ FIELDS TERMINATED BY ',' OPTIONALLY ENCLOSED BY '"' TRAILING NULLCOLS
 
 ```
 #### vote
-##### bad.txt
-```
-susie88,0,1
-
-```
 ##### control.txt
 ```
 LOAD DATA INFILE '../vote.csv'
@@ -534,11 +426,6 @@ FIELDS TERMINATED BY ',' TRAILING NULLCOLS
 
 ```
 #### answer
-##### bad.txt
-```
-cmartinez,56
-
-```
 ##### control.txt
 ```
 LOAD DATA INFILE '../answer.csv'
@@ -550,11 +437,6 @@ FIELDS TERMINATED BY ','
 )
 ```
 #### option
-##### bad.txt
-```
-1,"Spend more time communicating with others.",1
-
-```
 ##### control.txt
 ```
 LOAD DATA INFILE '../options.csv'
@@ -568,11 +450,6 @@ FIELDS TERMINATED BY ',' OPTIONALLY ENCLOSED BY '"'
 
 ```
 #### survey
-##### bad.txt
-```
-16,"Why is it important to have hobbies?",16
-
-```
 ##### control.txt
 ```
 LOAD DATA INFILE '../survey.csv'
@@ -587,11 +464,6 @@ FIELDS TERMINATED BY ',' OPTIONALLY ENCLOSED BY '"' TRAILING NULLCOLS
 
 ```
 #### post
-##### bad.txt
-```
-28,"Siempre hay luz detrás de las nubes. #esperanza",2024-02-16,,"BuildingF","angieall"
-
-```
 ##### control.txt
 ```
 LOAD DATA INFILE '../posts.csv'
@@ -614,7 +486,7 @@ FIELDS TERMINATED BY ',' OPTIONALLY ENCLOSED BY '"' TRAILING NULLCOLS
 LOAD DATA INFILE '../users.csv'
 INTO TABLE Users 
 FIELDS TERMINATED BY ',' TRAILING NULLCOLS
-(   pseudo,
+(  	pseudo,
     name,
     surname,
     mail,
@@ -624,11 +496,6 @@ FIELDS TERMINATED BY ',' TRAILING NULLCOLS
     ban_reason   
 )
 
-
-```
-##### bad.txt
-```
-quirfy29,John,Doe,john.doe@example.com,192.168.1.1,"Utilisateur actif sur le réseau social.",2024-12-15,"Violation of guidelines"
 
 ```
 #### load.sh
@@ -692,43 +559,6 @@ georgem15,George,Mitchell,george.mitchell@example.com,192.168.1.37,"Utilisateur 
 laurarobs,Laura,Roberts,laura.roberts@example.com,192.168.1.38,"Always up for new challenges!",,
 edp23,Edward,Phillips,edward.phillips@example.com,192.168.1.39,,,
 rebcam99,Rebecca,Campbell,rebecca.campbell@example.com,192.168.1.40,"Explorateur de hashtags tendance.",,
-```
-### vote.csv
-```
-pseudo, idpost, valute
-quirfy29,31,-1
-smithjane,39,-1
-mikej09,18,1
-lindawil,33,1
-brown_55,30,1
-susie88,7,1
-furyjams,32,-1
-maryd8,34,-1
-m_mart,17,1
-pattie23,34,1
-david34mo,37,-1
-barbwhite,8,1
-richeatay,34,-1
-karenanna,3,-1
-joseph56t,31,-1
-nancyj10,8,1
-charlttc,2,1
-lisa_lh,27,-1
-cmartinez,12,-1
-clarks,20,-1
-danl33,21,-1
-walkerem,15,-1
-phall92,31,-1
-angieall,39,1
-keviny25,4,1
-dhernz,27,1
-markkings,37,1
-mwright45,15,-1
-donaldlop,14,1
-dorohills,27,-1
-quirfy29,5,1
-smithjane,15,-1
-mikej09,25,1
 ```
 ### survey.csv
 ```
@@ -1289,311 +1119,8 @@ lindawil,78
 brown_55,79
 susie88,80
 ```
-## views
-### create_views.sql
-```
-@views/feed.sql
-@views/grades.sql
-@views/my_data.sql
-@views/my_draft.sql
-@views/my_messages.sql
-@views/rank_post.sql
-@views/sanctions.sql
-@views/tendance.sql
-@views/top_user.sql
-@views/urgent_signal.sql
-@views/user_ranks.sql
-```
-### my_messages.sql
-```
-create or replace view MyMessages as select
-    pm.sender as sender, r.pseudo as recipient, pm.message as message,
-    pm.date_send as date_send
-from
-    PrivateMessage pm, Receive r
-where
-    pm.idpm = r.idpm and
-    (pm.sender = lower(user) or r.pseudo = lower(user));
 
-grant select, update, delete on MyMessages to client, moderator;
-```
-### my_draft.sql
-```
--- Procédure créant ou remplaçant la vue MyDraft
--- Vue modélisant les brouilons (drafts) de l'utilsateur
-
-create or replace view MyDraft as
-select * 
-from Draft 
-where pseudo = lower(user)
-order by iddraft desc;
-
-grant select, update, delete on MyDraft to client, moderator;
-```
-### my_data.sql
-```
-create or replace view MyData as
-select *
-from Users
-where pseudo = lower(user);
-
-grant select, update on MyData to client, moderator;
-```
-### grades.sql
-```
--- Procédure créant ou remplaçant la vue Influencer
--- Vue modélisant les utilisateurs faisant parti du N%
--- des utilisateurs en fonction de leur rank
-
-
--- grant select on Goat to client, moderator;
-
-create or replace function get_user_count return number as
-    n number := 0;
-begin
-    select
-        count(pseudo) into n
-    from
-        Rank;
-
-    return n;
-end;
-/
-
-create or replace view Goat as select
-    pseudo, rank
-from
-    Rank
-where
-    rownum <= 0.1 * get_user_count;
-
-grant select on Goat to client, moderator;
-
-create or replace view Influencer as select
-    pseudo, rank
-from
-    Rank
-where
-    rownum > 0.1 * get_user_count and
-    rownum <= 0.5 * get_user_count;
-
-grant select on Influencer to client, moderator;
-
-create or replace view Nobody as select
-    pseudo, rank
-from
-    Rank
-where
-    rownum > 0.5 * get_user_count;
-
-grant select on Nobody to client, moderator;
-```
-### user_ranks.sql
-```
--- Procédure créant ou remplaçant la vue Rank
--- Vue modélisant le rank de tous les utilisateurs
-
-create or replace view Rank as
-select Post.pseudo as pseudo, sum(Vote.value) as rank
-from Post, Vote
-where Post.idpost = Vote.idpost
-group by Post.idpost, Post.pseudo
-order by rank desc;
-
-grant select on Rank to client, moderator;
-```
-### urgent_signal.sql
-```
--- Procédure créant ou remplaçant la vue UrgentSignal
--- Vue modélisant les posts signalés plus de 30 fois
-
-create or replace view UrgentSignal as
-select idpost
-from Signal
-group by idpost
-having count(*) >= 30;
-
-grant select on UrgentSignal to moderator;
-```
-### top_user.sql
-```
--- Procédure créant ou remplaçant la vue TopUser
--- Vue modélisant le classement des utilisateurs les plus suivis
-
-create or replace view TopUser as
-select Users.pseudo, count(*) as nb_followers
-from Users left join Follow on Users.pseudo=Follow.pseudo
-group by Users.pseudo
-order by nb_followers desc;
-
-grant select on TopUser to client, moderator;
-```
-### tendance.sql
-```
--- Procédure créant ou remplaçant la vue Tendance
--- Vue modélisant les hashtags (tendance) des 7 derniers jours
-
-create or replace view Tendance as
-select HH.hashtag as hashtag, count(HH.idpost) as nb_posts
-from HasHashtag HH, Post P
-where P.idpost=HH.idpost and P.date_post>=(SYSDATE-7)
-group by HH.hashtag
-order by nb_posts desc 
-fetch first 10 rows only;
-
-grant select on Tendance to client, moderator;
-```
-### sanctions.sql
-```
--- Procédure créant ou remplaçant la vue Sanctions
--- Vue modélisant le temps restant avant la fin du banissement des utilisateurs bannis
-
-create or replace view Sanctions as
-select pseudo, ban_end - SYSDATE as time_left, ban_reason
-from Users
-where SYSDATE < ban_end;
-
-grant select on Sanctions to client, moderator;
-```
-### rank_post.sql
-```
--- Procédure créant ou remplaçant la vue RankPost
--- Vue modélisant les statistiques d'un post donné
-
-create or replace view RankPost as
-select sum(value) as rank,
-   sum(case when Vote.value > 0 then 0 else 1 end) as downvotes,
-   sum(case when Vote.value > 0 then 1 else 0 end) as upvotes
-from Vote
-group by idpost;
-
-grant select on RankPost to client, moderator;
-```
-### feed.sql
-```
--- Vue modélisant le fil d'actualité de l'utilisateur
-
-create or replace view Feed as
-select * from Post
-where pseudo in (select pseudo from Follow where follower=lower(user))
-order by date_post desc;
-
-grant select on Feed to client, moderator;
-```
-## rights
-### client_execute.sql
-```
--- Droits d'exécution des Fonctions / Procédures utilisées par le role client :
-
--- activities :
-
-grant execute on is_post_cooldown_up to client, moderator;
-grant execute on add_hashtag to client, moderator;
-grant execute on parse_hashtags to client, moderator;
-grant execute on new_idpost to client, moderator;
-grant execute on new_idsurvey to client, moderator;
-grant execute on new_idoption to client, moderator;
-grant execute on update_location to client, moderator;
-grant execute on add_post to client, moderator;
-grant execute on validate_draft to client, moderator;
-grant execute on add_vote to client, moderator;
-
--- hashtag :
-
-grant execute on get_proportion_hashtag to client, moderator;
-grant execute on max_frequency_hashtag to client, moderator;
-grant execute on get_hashtag_day to client, moderator;
-
--- message_thread :
-
-grant execute on get_proportion_message to client, moderator;
-grant execute on new_id_private_message to client, moderator;
-grant execute on send_message to client, moderator;
-
--- survey :
-
-grant execute on add_survey to client, moderator;
-grant execute on add_option to client, moderator;
-grant execute on add_answer to client, moderator;
-grant execute on survey_result to client, moderator;
-
--- users :
-
-grant execute on get_average_rank_post to client, moderator;
-grant execute on get_linked_user to client, moderator;
-
--- views/grades :
-grant execute on get_user_count to client, moderator;
-```
-### moderator.sql
-```
-create role moderator;
-grant create session to moderator;
-grant create view to moderator;
-
--- Ajouter l'accès aux procédures ici
-grant execute on admin.add_user to moderator;
-
-grant select on Post, Survey, Options, Follow, Vote, Hashtag, HasHashtag to moderator;
-
--- Moderateurs test, normalement les moderateurs doivent
--- être crées par l'admin.
-create user modo1 identified by peche;
-grant moderator to modo1;
-```
-### client.sql
-```
--- /!\ Attention ! On ne peut pas donner les droits sur les
---     procédures ici car les utilisateurs sont crées avant
---     les procédures dans l'ordre d'execution spécifié dans
---     le README.md. Je les ai déplacé à la fin de "rights/client_procedures.sql"
-
-create role client;
-grant create session to client;
-grant create view to client;
-
--- Droits de sélection sur certaines tables :
-grant select on Post to client, moderator;
-grant select on Survey to client, moderator;
-grant select on Options to client, moderator;
-grant select on Answer to client, moderator;
-grant select on Follow to client, moderator;
-grant select on Vote to client, moderator;
-grant select on Hashtag to client, moderator;
-grant select on HasHashtag to client, moderator;
-
-
--- Utilisateurs test, normalement les utilisateurs doivent
--- être crées par l'admin.
-call add_user('jean', 'jean@jean.fr', 'pasteque');
-call add_user('lola', 'lola@lola.fr', 'kiwi');
-
-```
-### create_users.sql
-```
-alter session set "_ORACLE_SCRIPT"=TRUE;
-
-@rights/admin.sql -- Peut administrer la BD, chargé de créer les tables, les triggers, les fonctions, etc...
-@rights/moderator.sql -- Modère le réseau social en lui-même
-@rights/client.sql -- Role utilisateur du client classique.
-
-```
-### admin.sql
-```
--- Administrateur de la BD
--- C'est lui qui crée les tables, les vues, les triggers, etc.
-
-create user admin identified by banane;
-grant create session to admin;
-grant unlimited tablespace to admin;
-grant create table to admin;
-grant create procedure to admin;
-grant create user to admin;
-grant create trigger to admin;
-grant create view to admin;
-grant grant any role to admin;
-```
-## requests
+## C/ Manipulation des donées
 ### moderator
 #### moderator.sql
 ```
@@ -1806,17 +1333,17 @@ end;
 -- R26 : Quelles sont mes dernières discussions privées ?
 select distinct pseudo
 from(
-    select a.pseudo as pseudo, a.date_send
-    from (
-        select recipient as pseudo, date_send
-        from admin.MyMessages
-        where sender = lower(user)
-        union
-        select sender as pseudo, date_send
-        from admin.MyMessages
-        where recipient = lower(user)
-    ) a
-    order by a.date_send
+	select a.pseudo as pseudo, a.date_send
+	from (
+		select recipient as pseudo, date_send
+		from admin.MyMessages
+		where sender = lower(user)
+		union
+		select sender as pseudo, date_send
+		from admin.MyMessages
+		where recipient = lower(user)
+	) a
+	order by a.date_send
 );
 
 -- R27 : Quelle est la proportion de messages envoyés/reçus entre [moi] et l'utilisateur [TARGET_USER] ?
@@ -1849,51 +1376,51 @@ end;
 /
 
 create or replace function new_id_private_message return number AS
-    RESULT number(6);
+	RESULT number(6);
 begin
-    select NVL(max(idpm)+1, 0) into RESULT
-    from PrivateMessage;
+	select NVL(max(idpm)+1, 0) into RESULT
+	from PrivateMessage;
 
-    return RESULT;
+	return RESULT;
 end;
 /
 
 create or replace procedure send_message(msg IN varchar, recipients_csv IN varchar) as
-    new_id number(6)      := new_id_private_message;
-    field_index number(6) := 0;
-    current varchar(1)    := '';
-    buffer varchar(64)    := '';
+	new_id number(6)      := new_id_private_message;
+	field_index number(6) := 0;
+	current varchar(1)    := '';
+	buffer varchar(64)    := '';
 
 begin
 
-    insert into PrivateMessage values (new_id, msg, current_date, lower(user));
+	insert into PrivateMessage values (new_id, msg, current_date, lower(user));
 
-    -- Pour chaque champ du CSV, on insert dans Receive.
+	-- Pour chaque champ du CSV, on insert dans Receive.
 
-    -- On itère sur chaque caractère du CSV.
-    for j in 1..length(recipients_csv) loop
+	-- On itère sur chaque caractère du CSV.
+	for j in 1..length(recipients_csv) loop
 
-        current := substr(recipients_csv, j, 1);
+		current := substr(recipients_csv, j, 1);
 
-        -- Fin d'un champ
-        if current = ',' then
-            dbms_output.put_line('new receive : {'||new_id||','||buffer||'}');
+		-- Fin d'un champ
+		if current = ',' then
+			dbms_output.put_line('new receive : {'||new_id||','||buffer||'}');
 
-            insert into Receive values (new_id, buffer);
-            buffer := '';
-            field_index := field_index + 1; 
-        else
-            buffer := buffer || current;
-        end if;
+			insert into Receive values (new_id, buffer);
+			buffer := '';
+			field_index := field_index + 1; 
+		else
+			buffer := buffer || current;
+		end if;
 
-    end loop;
-    
-    dbms_output.put_line('buffer : '||buffer);
-    -- On envoie le dernier champ si le CSV de se finit pas par ','
-    if length(buffer) > 0 then
-        dbms_output.put_line('new receive : {'||new_id||','||buffer||'}');
-        insert into Receive values (new_id, buffer);
-    end if;
+	end loop;
+	
+	dbms_output.put_line('buffer : '||buffer);
+	-- On envoie le dernier champ si le CSV de se finit pas par ','
+	if length(buffer) > 0 then
+		dbms_output.put_line('new receive : {'||new_id||','||buffer||'}');
+		insert into Receive values (new_id, buffer);
+	end if;
 
 end;
 /
@@ -1915,160 +1442,160 @@ where length(message) = (select max(length(message)) from admin.MyDraft);
 -- Renvoie 1 si le dernier post de l'utilisateur actuel date
 -- d'au moins deux secondes, 0 sinon.
 create or replace function is_post_cooldown_up return boolean as
-    max_date date     := current_date;
-    delay number      := 0.0;
-    post_count number := 0;
+	max_date date     := current_date;
+	delay number      := 0.0;
+	post_count number := 0;
 begin
 
-    -- S'il n'y a aucun post, il n'y a pas de cooldown.
-    select
-        count(idpost) into post_count
-    from Post;
+	-- S'il n'y a aucun post, il n'y a pas de cooldown.
+	select
+		count(idpost) into post_count
+	from Post;
 
-    if post_count = 0 then
-        return TRUE;
-    end if;
+	if post_count = 0 then
+		return TRUE;
+	end if;
 
-    select
-        max(date_post) into max_date
-    from
-        Post
-    where
-        upper(pseudo) = user;
+	select
+		max(date_post) into max_date
+	from
+		Post
+	where
+		upper(pseudo) = user;
 
-    delay := current_date - max_date;
-    -- Conversion en secondes
-    delay := delay * 24 * 3600;
+	delay := current_date - max_date;
+	-- Conversion en secondes
+	delay := delay * 24 * 3600;
 
-    if delay > 2.0 then
-        return TRUE;
-    else
-        return FALSE;
-    end if;
+	if delay > 2.0 then
+		return TRUE;
+	else
+		return FALSE;
+	end if;
 end;
 /
 
 create or replace procedure add_hashtag(hashtag IN varchar, post IN number) as
-    occurences number := 0;
+	occurences number := 0;
 begin
-    select
-        count(content) into occurences
-    from Hashtag where content = hashtag;
+	select
+		count(content) into occurences
+	from Hashtag where content = hashtag;
 
-    if occurences = 0 then
-        insert into Hashtag values (hashtag);
-    end if;
+	if occurences = 0 then
+		insert into Hashtag values (hashtag);
+	end if;
 
-    insert into HasHashtag values (post, hashtag);
+	insert into HasHashtag values (post, hashtag);
 end;
 /
 
 -- Insère tous les mots précédés par un '#' dans la table 
 -- Hashtag.
 create or replace procedure parse_hashtags(post IN number, msg IN varchar) as
-    parser_state number(1) := 0;
-    buffer varchar(140) := '';
-    c varchar(1) := '_';
+	parser_state number(1) := 0;
+	buffer varchar(140) := '';
+	c varchar(1) := '_';
 begin
 
-    -- Parsing:
-    --  - Etat 0: Recherche du caractère '#'
-    --  - Etat 1: Récupération du hashtag dans buffer
+	-- Parsing:
+	--  - Etat 0: Recherche du caractère '#'
+	--	- Etat 1: Récupération du hashtag dans buffer
 
-    if length(msg) > 1 then
-        for i in 1..length(msg) loop
-            c := substr(msg, i, 1);
-            if parser_state = 0 and c = '#' then
-                parser_state := 1;
-                buffer := '';
-            else
-                if parser_state = 1 and (c = ' ' or i = length(msg)-1) then
-                    add_hashtag(buffer, post);
-                    buffer := '';
-                    parser_state := 0;
-                else
-                    buffer := buffer || c;
-                end if;
-            end if;
-        end loop;
-    end if;
+	if length(msg) > 1 then
+		for i in 1..length(msg) loop
+			c := substr(msg, i, 1);
+			if parser_state = 0 and c = '#' then
+				parser_state := 1;
+				buffer := '';
+			else
+				if parser_state = 1 and (c = ' ' or i = length(msg)-1) then
+					add_hashtag(buffer, post);
+					buffer := '';
+					parser_state := 0;
+				else
+					buffer := buffer || c;
+				end if;
+			end if;
+		end loop;
+	end if;
 
 end;
 /
 
 create or replace function new_idpost return number AS
-    RESULT number(6);
+	RESULT number(6);
 begin
-    select NVL(max(idpost)+1, 0) into RESULT
-    from Post;
+	select NVL(max(idpost)+1, 0) into RESULT
+	from Post;
 
-    return RESULT;
+	return RESULT;
 end;
 /
 
 create or replace function new_idsurvey return number AS
-    RESULT number(6);
+	RESULT number(6);
 begin
-    select NVL(max(idsurvey)+1, 0) into RESULT
-    from Survey;
+	select NVL(max(idsurvey)+1, 0) into RESULT
+	from Survey;
 
-    return RESULT;
+	return RESULT;
 end;
 /
 
 create or replace function new_idoption return number AS
-    RESULT number(6);
+	RESULT number(6);
 begin
-    select NVL(max(idoption)+1, 0) into RESULT
-    from Options;
+	select NVL(max(idoption)+1, 0) into RESULT
+	from Options;
 
-    return RESULT;
+	return RESULT;
 end;
 /
 
 -- Ajout de la location d'un post
 create or replace procedure update_location(room in varchar, buiding in varchar) as
 begin
-    update Post set room = room, building = building
-    where pseudo = lower(user);
+	update Post set room = room, building = building
+	where pseudo = lower(user);
 end;
 /
 
 -- Seul et unique moyen d'ajouter des posts dans la base de donnée
 -- pour l'utilisateur lambda.
 create or replace procedure add_post(msg IN varchar, room IN varchar, building IN varchar) as
-    id varchar(32) := 'none';
+	id varchar(32) := 'none';
 begin
-    if is_post_cooldown_up = FALSE then
-        raise_application_error(-20589, 'Please wait at least 2 seconds before posting again.');
-    else
-        insert into Post values (new_idpost, msg, current_date, room, building, lower(user));
-    end if;
+	if is_post_cooldown_up = FALSE then
+		raise_application_error(-20589, 'Please wait at least 2 seconds before posting again.');
+	else
+		insert into Post values (new_idpost, msg, current_date, room, building, lower(user));
+	end if;
 end;
 /
 
 -- Permet à l'utilisateur de modifier l'attribut validate de l'un de ses brouillons (draft)
 create or replace procedure validate_draft(id in number, state in boolean) as
 begin
-    update Draft set state = state where iddraft = id;
+	update Draft set state = state where iddraft = id;
 end;
 /
 
 -- Permet à l'utilisateur de signaler un post
 create or replace procedure add_signal(TARGET_USER in varchar, ID_POST in number) as
 begin
-    insert into Signal values(TARGET_USER, ID_POST);
+	insert into Signal values(TARGET_USER, ID_POST);
 end;
 /
 
 -- Permet d'ajouter un nouveau vote 
 create or replace procedure add_vote(ID_POST in number, IS_LIKE in boolean) as
 begin
-    if IS_LIKE = TRUE then
-        insert into Vote values(lower(user),ID_POST,1);
-    else
-        insert into Vote values(lower(user),ID_POST,-1);
-    end if;
+	if IS_LIKE = TRUE then
+		insert into Vote values(lower(user),ID_POST,1);
+	else
+		insert into Vote values(lower(user),ID_POST,-1);
+	end if;
 end;
 /
 ```
@@ -2232,361 +1759,315 @@ where idsurvey in (
 #### admin_procedures.sql
 ```
 create or replace function mail_unicity(new_mail in varchar) return number as
-    result number(1) := 0;
+	result number(1) := 0;
 begin
-    select count(*) into result
-    from Users
-    where mail = new_mail;
-    if result > 0 then
-        return 1;
-    else
-        return 0;
-    end if;
+	select count(*) into result
+	from Users
+	where mail = new_mail;
+	if result > 0 then
+		return 1;
+	else
+		return 0;
+	end if;
 end;
 /
 
 -- Procédure permettant l'ajout d'un nouveau post
 create or replace procedure add_user(pseudo IN varchar, mail IN varchar, password in VARCHAR) as
 begin
-    if mail_unicity(mail) = 0 then
-        insert into Users values (pseudo, null, null, mail, 'unknown', null, null, null);
-        execute immediate 'create user ' || pseudo || ' identified by ' || password;
-        execute immediate 'grant client to ' || pseudo;
-    else
-        RAISE_APPLICATION_ERROR(-20589, 'The adress mail : ' || mail || ' is already used.');
-    end if;
+	if mail_unicity(mail) = 0 then
+		insert into Users values (pseudo, null, null, mail, 'unknown', null, null, null);
+		execute immediate 'create user ' || pseudo || ' identified by ' || password;
+		execute immediate 'grant client to ' || pseudo;
+	else
+		RAISE_APPLICATION_ERROR(-20589, 'The adress mail : ' || mail || ' is already used.');
+	end if;
 end;
 /
 ```
-## model-definition
-### vote.sql
+## D/ Vues et droits
+### my_messages.sql
 ```
--- Création de la table
-create table Vote(
-    pseudo varchar(15),
-    idpost number(6),
-    value Number(1) not null,
-    primary key (pseudo, idpost),
-    foreign key (pseudo) references Users(pseudo) on delete cascade,
-    foreign key (idpost) references Post(idpost) on delete cascade
-);
-```
-### user.sql
-```
--- Création de la table
-create table Users (
-    pseudo varchar(15) primary key,
-    name varchar(30),
-    surname varchar(30),
-    mail varchar(64) not null,
-    IPaddress varchar(15) not null,
-    description varchar(160),
-    ban_end date,
-    ban_reason varchar(160)
-);
-```
-### test.sql
-```
--- Test des tables
+create or replace view MyMessages as select
+  pm.sender as sender, r.pseudo as recipient, pm.message as message,
+  pm.date_send as date_send
+from
+  PrivateMessage pm, Receive r
+where
+  pm.idpm = r.idpm and
+  (pm.sender = lower(user) or r.pseudo = lower(user));
 
-desc Users;
-desc Post;
-desc Survey;
-desc Options;
-desc PrivateMessage;
-desc Receive;
-desc Follow;
-desc Draft;
-desc Vote;
-desc Signal;
-desc Answer;
-desc Hashtag;
-desc HasHashtag;
+grant select, update, delete on MyMessages to client, moderator;
 ```
-### survey.sql
+### my_draft.sql
 ```
--- Création de la table
-create table Survey(
-    idsurvey Number(6) primary key,
-    question varchar(280) not null,
-    idpost number(6),
-    foreign key (idpost) references Post(idpost) on delete cascade
-);
-```
-### signal.sql
-```
--- Création de la table
-create table Signal(
-    pseudo varchar(15),
-    idpost number(6),
-    primary key (pseudo, idpost),
-    foreign key (pseudo) references Users(pseudo) on delete cascade,
-    foreign key (idpost) references Post(idpost) on delete cascade
-);
-```
-### receive.sql
-```
--- Création de la table
-create table Receive(
-    idpm Number(6),
-    pseudo varchar(15),
-    primary key (idpm, pseudo),
-    foreign key (pseudo) references Users(pseudo) on delete cascade
-);
-```
-### private_message.sql
-```
--- Création de la table
-create table PrivateMessage(
-    idpm Number(6) primary key,
-    message varchar(280) not null,
-    date_send date not null,
-    sender varchar(15),
-    foreign key (sender) references Users(pseudo) on delete cascade
-);
-```
-### post.sql
-```
--- Création de la table
-create table Post (
-    idpost number(6) primary key,
-    message varchar(280) not null,
-    date_post date not null,
-    room varchar(20),
-    building varchar(20),
-    pseudo varchar(15),
-    foreign key (pseudo) references Users(pseudo) on delete cascade
-);
-```
-### option.sql
-```
--- Création de la table
-create table Options(
-    idoption Number(6) primary key,
-    content varchar(150) not null,
-    idsurvey Number(6),
-    foreign key (idsurvey) references Survey(idsurvey) on delete cascade
-);
-```
-### hashtag.sql
-```
--- Création de la table
-create table Hashtag(
-    content varchar(140) primary key
-);
-```
-### has_hashtag.sql
-```
--- Création de la table
-create table HasHashtag(
-    idpost number(6),
-    hashtag varchar(140),
-    primary key (idpost, hashtag),
-    foreign key (idpost) references Post(idpost) on delete cascade,
-    foreign key (hashtag) references Hashtag(content) on delete cascade
-);
-```
-### follow.sql
-```
--- Création de la table
-create table Follow(
-    -- pseudo référence le pseudo d'un utilisateur
-    pseudo varchar(15),
-    -- follower référence le ou les utilisateur(s) qui suivent 'pseudo'             
-    follower varchar(15),
-    primary key (pseudo, follower),
-    foreign key (pseudo) references Users(pseudo) on delete cascade,
-    foreign key (follower) references Users(pseudo) on delete cascade
-);
+-- Procédure créant ou remplaçant la vue MyDraft
+-- Vue modélisant les brouilons (drafts) de l'utilsateur
 
-alter table Follow add constraint follow_self check (pseudo!=follower);
+create or replace view MyDraft as
+select * 
+from Draft 
+where pseudo = lower(user)
+order by iddraft desc;
+
+grant select, update, delete on MyDraft to client, moderator;
 ```
-### draft.sql
+### my_data.sql
 ```
--- Création de la table
-create table Draft(
-    iddraft Number(5) primary key,
-    message varchar(280),
-    pseudo varchar(15),
-    state boolean,
-    foreign key (pseudo) references Users(pseudo) on delete cascade
-);
+create or replace view MyData as
+select *
+from Users
+where pseudo = lower(user);
+
+grant select, update on MyData to client, moderator;
 ```
-### delete_tables.sql
+### grades.sql
 ```
--- HasHashtag
+-- Procédure créant ou remplaçant la vue Influencer
+-- Vue modélisant les utilisateurs faisant parti du N%
+-- des utilisateurs en fonction de leur rank
+
+
+-- grant select on Goat to client, moderator;
+
+create or replace function get_user_count return number as
+  n number := 0;
 begin
-   EXECUTE IMMEDIATE 'DROP TABLE HasHashtag';
-EXCEPTION
-   when OTHERS then
-        if SQLCODE != -942 then
-         RAISE;
-        end if;
+  select
+    count(pseudo) into n
+  from
+    Rank;
+
+  return n;
 end;
 /
 
--- Hashtag
-begin
-   EXECUTE IMMEDIATE 'DROP TABLE Hashtag';
-EXCEPTION
-   when OTHERS then
-        if SQLCODE != -942 then
-         RAISE;
-        end if;
-end;
-/
+create or replace view Goat as select
+  pseudo, rank
+from
+  Rank
+where
+  rownum <= 0.1 * get_user_count;
 
--- Answer
-begin
-   EXECUTE IMMEDIATE 'DROP TABLE Answer';
-EXCEPTION
-   when OTHERS then
-        if SQLCODE != -942 then
-         RAISE;
-        end if;
-end;
-/
+grant select on Goat to client, moderator;
 
--- Signal
-begin
-   EXECUTE IMMEDIATE 'DROP TABLE Signal';
-EXCEPTION
-   when OTHERS then
-        if SQLCODE != -942 then
-         RAISE;
-        end if;
-end;
-/
+create or replace view Influencer as select
+  pseudo, rank
+from
+  Rank
+where
+  rownum > 0.1 * get_user_count and
+  rownum <= 0.5 * get_user_count;
 
--- Vote
-begin
-   EXECUTE IMMEDIATE 'DROP TABLE Vote';
-EXCEPTION
-   when OTHERS then
-        if SQLCODE != -942 then
-         RAISE;
-        end if;
-end;
-/
+grant select on Influencer to client, moderator;
 
--- Draft
-begin
-   EXECUTE IMMEDIATE 'DROP TABLE Draft';
-EXCEPTION
-   when OTHERS then
-        if SQLCODE != -942 then
-         RAISE;
-        end if;
-end;
-/
+create or replace view Nobody as select
+  pseudo, rank
+from
+  Rank
+where
+  rownum > 0.5 * get_user_count;
 
--- Follow
-begin
-   EXECUTE IMMEDIATE 'DROP TABLE Follow';
-EXCEPTION
-   when OTHERS then
-        if SQLCODE != -942 then
-         RAISE;
-        end if;
-end;
-/
-
--- Receive
-begin
-   EXECUTE IMMEDIATE 'DROP TABLE Receive';
-EXCEPTION
-   when OTHERS then
-        if SQLCODE != -942 then
-         RAISE;
-        end if;
-end;
-/
-
--- PrivateMessage
-begin
-   EXECUTE IMMEDIATE 'DROP TABLE PrivateMessage';
-EXCEPTION
-   when OTHERS then
-        if SQLCODE != -942 then
-         RAISE;
-        end if;
-end;
-/
-
--- Options
-begin
-   EXECUTE IMMEDIATE 'DROP TABLE Options';
-EXCEPTION
-   when OTHERS then
-        if SQLCODE != -942 then
-         RAISE;
-        end if;
-end;
-/
-
--- Survey
-begin
-   EXECUTE IMMEDIATE 'DROP TABLE Survey';
-EXCEPTION
-   when OTHERS then
-        if SQLCODE != -942 then
-         RAISE;
-        end if;
-end;
-/
-
--- Post
-begin
-   EXECUTE IMMEDIATE 'DROP TABLE Post';
-EXCEPTION
-   when OTHERS then
-        if SQLCODE != -942 then
-         RAISE;
-        end if;
-end;
-/
-
--- Users
-begin
-   EXECUTE IMMEDIATE 'DROP TABLE Users';
-EXCEPTION
-   when OTHERS then
-        if SQLCODE != -942 then
-         RAISE;
-        end if;
-end;
-/
+grant select on Nobody to client, moderator;
 ```
-### create_tables.sql
+### user_ranks.sql
 ```
-@model-definition/delete_tables.sql
+-- Procédure créant ou remplaçant la vue Rank
+-- Vue modélisant le rank de tous les utilisateurs
 
-@model-definition/user.sql
-@model-definition/post.sql
-@model-definition/survey.sql
-@model-definition/option.sql
-@model-definition/private_message.sql
-@model-definition/receive.sql
-@model-definition/follow.sql
-@model-definition/draft.sql
-@model-definition/vote.sql
-@model-definition/signal.sql
-@model-definition/answer.sql
-@model-definition/hashtag.sql
-@model-definition/has_hashtag.sql
+create or replace view Rank as
+select Post.pseudo as pseudo, sum(Vote.value) as rank
+from Post, Vote
+where Post.idpost = Vote.idpost
+group by Post.idpost, Post.pseudo
+order by rank desc;
+
+grant select on Rank to client, moderator;
 ```
-### answer.sql
+### urgent_signal.sql
 ```
--- Création de la table
-create table Answer(
-    pseudo varchar(15),
-    idoption Number(6),
-    primary key (pseudo, idoption),
-    foreign key (pseudo) references Users(pseudo) on delete cascade,
-    foreign key (idoption) references Options(idoption) on delete cascade
-);
+-- Procédure créant ou remplaçant la vue UrgentSignal
+-- Vue modélisant les posts signalés plus de 30 fois
+
+create or replace view UrgentSignal as
+select idpost
+from Signal
+group by idpost
+having count(*) >= 30;
+
+grant select on UrgentSignal to moderator;
 ```
-## constraints
+### top_user.sql
+```
+-- Procédure créant ou remplaçant la vue TopUser
+-- Vue modélisant le classement des utilisateurs les plus suivis
+
+create or replace view TopUser as
+select Users.pseudo, count(*) as nb_followers
+from Users left join Follow on Users.pseudo=Follow.pseudo
+group by Users.pseudo
+order by nb_followers desc;
+
+grant select on TopUser to client, moderator;
+```
+### tendance.sql
+```
+-- Procédure créant ou remplaçant la vue Tendance
+-- Vue modélisant les hashtags (tendance) des 7 derniers jours
+
+create or replace view Tendance as
+select HH.hashtag as hashtag, count(HH.idpost) as nb_posts
+from HasHashtag HH, Post P
+where P.idpost=HH.idpost and P.date_post>=(SYSDATE-7)
+group by HH.hashtag
+order by nb_posts desc 
+fetch first 10 rows only;
+
+grant select on Tendance to client, moderator;
+```
+### sanctions.sql
+```
+-- Procédure créant ou remplaçant la vue Sanctions
+-- Vue modélisant le temps restant avant la fin du banissement des utilisateurs bannis
+
+create or replace view Sanctions as
+select pseudo, ban_end - SYSDATE as time_left, ban_reason
+from Users
+where SYSDATE < ban_end;
+
+grant select on Sanctions to client, moderator;
+```
+### rank_post.sql
+```
+-- Procédure créant ou remplaçant la vue RankPost
+-- Vue modélisant les statistiques d'un post donné
+
+create or replace view RankPost as
+select sum(value) as rank,
+   sum(case when Vote.value > 0 then 0 else 1 end) as downvotes,
+   sum(case when Vote.value > 0 then 1 else 0 end) as upvotes
+from Vote
+group by idpost;
+
+grant select on RankPost to client, moderator;
+```
+### feed.sql
+```
+-- Vue modélisant le fil d'actualité de l'utilisateur
+
+create or replace view Feed as
+select * from Post
+where pseudo in (select pseudo from Follow where follower=lower(user))
+order by date_post desc;
+
+grant select on Feed to client, moderator;
+```
+
+### client_execute.sql
+```
+-- Droits d'exécution des Fonctions / Procédures utilisées par le role client :
+
+-- activities :
+
+grant execute on is_post_cooldown_up to client, moderator;
+grant execute on add_hashtag to client, moderator;
+grant execute on parse_hashtags to client, moderator;
+grant execute on new_idpost to client, moderator;
+grant execute on new_idsurvey to client, moderator;
+grant execute on new_idoption to client, moderator;
+grant execute on update_location to client, moderator;
+grant execute on add_post to client, moderator;
+grant execute on validate_draft to client, moderator;
+grant execute on add_vote to client, moderator;
+
+-- hashtag :
+
+grant execute on get_proportion_hashtag to client, moderator;
+grant execute on max_frequency_hashtag to client, moderator;
+grant execute on get_hashtag_day to client, moderator;
+
+-- message_thread :
+
+grant execute on get_proportion_message to client, moderator;
+grant execute on new_id_private_message to client, moderator;
+grant execute on send_message to client, moderator;
+
+-- survey :
+
+grant execute on add_survey to client, moderator;
+grant execute on add_option to client, moderator;
+grant execute on add_answer to client, moderator;
+grant execute on survey_result to client, moderator;
+
+-- users :
+
+grant execute on get_average_rank_post to client, moderator;
+grant execute on get_linked_user to client, moderator;
+
+-- views/grades :
+grant execute on get_user_count to client, moderator;
+```
+### moderator.sql
+```
+create role moderator;
+grant create session to moderator;
+grant create view to moderator;
+
+-- Ajouter l'accès aux procédures ici
+grant execute on admin.add_user to moderator;
+
+grant select on Post, Survey, Options, Follow, Vote, Hashtag, HasHashtag to moderator;
+
+-- Moderateurs test, normalement les moderateurs doivent
+-- être crées par l'admin.
+create user modo1 identified by peche;
+grant moderator to modo1;
+```
+### client.sql
+```
+-- /!\ Attention ! On ne peut pas donner les droits sur les
+--     procédures ici car les utilisateurs sont crées avant
+--     les procédures dans l'ordre d'execution spécifié dans
+--     le README.md. Je les ai déplacé à la fin de "rights/client_procedures.sql"
+
+create role client;
+grant create session to client;
+grant create view to client;
+
+-- Droits de sélection sur certaines tables :
+grant select on Post to client, moderator;
+grant select on Survey to client, moderator;
+grant select on Options to client, moderator;
+grant select on Answer to client, moderator;
+grant select on Follow to client, moderator;
+grant select on Vote to client, moderator;
+grant select on Hashtag to client, moderator;
+grant select on HasHashtag to client, moderator;
+
+
+-- Utilisateurs test, normalement les utilisateurs doivent
+-- être crées par l'admin.
+call add_user('jean', 'jean@jean.fr', 'pasteque');
+call add_user('lola', 'lola@lola.fr', 'kiwi');
+
+```
+### admin.sql
+```
+-- Administrateur de la BD
+-- C'est lui qui crée les tables, les vues, les triggers, etc.
+
+create user admin identified by banane;
+grant create session to admin;
+grant unlimited tablespace to admin;
+grant create table to admin;
+grant create procedure to admin;
+grant create user to admin;
+grant create trigger to admin;
+grant create view to admin;
+grant grant any role to admin;
+```
+
+## E/ Intégrité des données
 ### user_activities.sql
 ```
 -- On empêche les utilisateur de voter pour leurs propres posts
@@ -2666,7 +2147,7 @@ create or replace trigger ban_user after update of ban_end on Users for each row
 begin
     if :new.ban_end is null then
         if lower(user) = 'moderator' then
-            execute immediate 'grant client to ' || :new.pseudo;
+		    execute immediate 'grant client to ' || :new.pseudo;
         end if;
     else
         if current_date < :new.ban_end then
@@ -2679,3 +2160,48 @@ end;
 /
 ```
 
+## F/ Méta-données
+### liste_ora_users.sql
+```
+-- Renvoie la liste de tous les utilisateurs de la BDD
+select username
+from all_users
+where username not in (
+    'SYS', 'SYSTEM', 'OUTLN', 'DBSNMP', 'MGMT_VIEW', 'APPQOSSYS',
+    'AUDSYS', 'CTXSYS', 'DVSYS', 'FLOWS_FILES', 'MDDATA', 'MDSYS',
+    'ORDDATA', 'ORDSYS', 'XDB', 'WMSYS', 'LBACSYS', 'OLAPSYS',
+    'OWBSYS', 'SPATIAL_CSW_ADMIN_USR', 'SPATIAL_WFS_ADMIN_USR',
+    'SI_INFORMTN_SCHEMA', 'ANONYMOUS', 'APEX_PUBLIC_USER', 'VECSYS',
+    'APEX_040000', 'APEX_050000', 'DIP', 'GSMADMIN_INTERNAL',
+    'GSMCATUSER', 'GSMUSER', 'REMOTE_SCHEDULER_AGENT', 'SYSRAC',
+    'XS$NULL', 'OJVMSYS', 'DBSFWUSER', 'DGPDB_INT', 'DVF', 'GGSHAREDCAP',
+    'GGSYS', 'GSMROOTUSER', 'SYSBACKUP', 'SYSDG', 'SYSKM', 'SYS$UMF'
+)
+order by username;
+```
+### liste_ora_trigger.sql
+```
+select
+table_name,
+trigger_name,
+triggering_event,
+trigger_type,
+status,
+description
+from user_triggers
+order by table_name, trigger_name;
+```
+### liste_ora_constraints.sql
+```
+select 
+uc.table_name,
+uc.constraint_name,
+uc.constraint_type,
+ucc.column_name,
+ucc.position,
+uc.search_condition as constraint_body
+from user_constraints uc left join user_cons_columns ucc
+on uc.constraint_name = ucc.constraint_name and uc.table_name = ucc.table_name
+where uc.table_name in ('USERS', 'POST', 'SURVEY', 'OPTIONS', 'PRIVATEMESSAGE', 'RECEIVE', 'FOLLOW', 'DRAFT', 'VOTE', 'SIGNAL', 'ANSWER', 'HASHTAG', 'HASHASHTAG')
+order by uc.table_name, uc.constraint_type, uc.constraint_name;
+```
