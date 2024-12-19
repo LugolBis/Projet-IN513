@@ -12,4 +12,4 @@ end;
 /
 
 -- Droits d'éxécution des procédures/fonctions :
-grant execute on get_IPadress to client, moderator;
+grant execute on get_IPadress to moderator;

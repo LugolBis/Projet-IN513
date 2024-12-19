@@ -25,7 +25,6 @@ from Survey
 where REGEXP_LIKE(question, 'genant', 'i') = TRUE;
 
 -- R20 : Quels sont les sondages contenant [mot] dans ces options ?
--- Procedure instable
 select *
 from Survey
 where idsurvey in (

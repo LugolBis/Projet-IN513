@@ -5,7 +5,9 @@ grant create view to moderator;
 -- Ajouter l'accès aux procédures ici
 grant execute on admin.add_user to moderator;
 
-grant select on Post, Survey, Options, Follow, Vote, Hashtag, HasHashtag to moderator;
+grant delete on Post to moderator;
+grant delete on Survey to moderator;
+grant update (date_end, ban_reason) on Users to moderator;
 
 -- Moderateurs test, normalement les moderateurs doivent
 -- être crées par l'admin.
