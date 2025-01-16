@@ -1,6 +1,8 @@
 # Projet - IN513
 
-<br>
+## Contributeurs
+- [@LugolBis - Loïc DESMARES](https://github.com/LugolBis)
+- [@Sama GHARIB ALI BARURA](https://github.com/sama-gharib)
 
 # Cahier des charges
 
@@ -189,23 +191,23 @@ end;
 Un utilisateur signalé un nombre conséquent de fois se voit infligé un bannissement temporaire de l’application.
 
 Au contraire, les utilisateurs avec un nombre d’upvotes total suffisant obtiennent des titres honorifiques en récompense affichés sur leur profils.
-[Voir la section sur les vues]()
+[Voir la section sur les vues](https://github.com/uvsq22201674/Projet-IN513/blob/main/rendu.md#vues)
 <br>
 De même, un utilisateur peut choisir de “suivre” d’autres utilisateurs ce qui lui permettra de filtrer les posts sur le mur de manière à ne voir que ceux des utilisateurs suivis.
-[Voir la section sur les droits]()
+[Voir la section sur les droits](https://github.com/uvsq22201674/Projet-IN513/blob/main/rendu.md#droits)
 <br>
 Lors de la rédaction d’un post, il est possible de le sauvegarder en tant que brouillon afin de continuer à le modifier plus tard sans le publier immédiatement.
-[Voir la section sur les vues]()
+[Voir la section sur les vues](https://github.com/uvsq22201674/Projet-IN513/blob/main/rendu.md#vues)
 <br>
 Cela suppose une certaine sécurité des comptes utilisateurs, qui devront donc s’identifier à l’aide d’un mot de passe secret.
-[Voir la section sur les droits]()
+[Voir la section sur les droits](https://github.com/uvsq22201674/Projet-IN513/blob/main/rendu.md#droits)
 <br>
 
 ## Posts
 Les posts sont des messages textuels publics courts (quelque centaines de caractères au maximum) affichés sur le mur par ordre chronologique décroissant (du plus récent au plus ancien).
 <br>
 Il est possible de filtrer les messages apparaissant sur le mur en fonction de critères divers (lieu ou heure de publication, auteur de la publication, hashtags impliqués, 
-popularité du post, etc.). [Voir la section sur les vues]()
+popularité du post, etc.). [Voir la section sur les vues](https://github.com/uvsq22201674/Projet-IN513/blob/main/rendu.md#vues)
 <br>
 Il est entendu que les interactions des utilisateurs sur les posts sont la fonctionnalité primordiale de notre application !
 <br>
@@ -853,5 +855,91 @@ group by idpost
 having count(*) >= 30;
 
 grant select on UrgentSignal to moderator;
+```
+<br>
+
+## Déploiement de la BDD
+
+### Requirements
+| Database system | Compatibility |
+|:-:|:-:|
+| Oracle Database 23ai | ✅ |
+
+### Installation
+Ce repository contient tous les scripts nécessaire à la création de notre base de donnée.
+Le fichier [***build_database.sql***](https://github.com/uvsq22201674/Projet-IN513/blob/main/build_database.sql) référence tous les scripts dans l'ordre d'appel. Pour construire la base de donnée il faut
+executer les commandes suivantes :
+```bash
+$ cd /chemin/vers/la/repo/Projet-IN513/
+$ sqlplus
+```
+Entrez les identifiants administrateurs de la BDD.
+```sqlplus
+SQL > @users/create_users.sql
+SQL > exit
+```
+```bash
+$ sqlplus admin/banane
+```
+```sqlplus
+SQL > @build_database.sql
+```
+
+## Peuplement de la BDD
+
+### Génération de données
+Pour peupler la base de données nous avons eu recourt à un model d'IA : Chat-GPT4. Si vous souhaitez plus d'informations sur la partie *Prompt engineering* consultez le fichier suivant [Détails des prompts](https://github.com/uvsq22201674/Projet-IN513/blob/main/RENDU/prompts.txt).
+
+### Chargement massif de données - SQL*LOADER
+Afin de charger rapidement les données générées et formatées (en .csv), nous avons utilisé SQL*Load. Si vous souhaitez plus amples détails vous pouvez vous référer au dossier suivant : [SQL*LOAD](https://github.com/uvsq22201674/Projet-IN513/tree/main/populate/sqlload).
+
+## Méta données de la BDD
+
+Liste des contraintes d'intégritées de la BDD :
+```SQL
+select 
+uc.table_name,
+uc.constraint_name,
+uc.constraint_type,
+ucc.column_name,
+ucc.position,
+uc.search_condition as constraint_body
+from user_constraints uc left join user_cons_columns ucc
+on uc.constraint_name = ucc.constraint_name and uc.table_name = ucc.table_name
+where uc.table_name in ('USERS', 'POST', 'SURVEY', 'OPTIONS', 'PRIVATEMESSAGE', 'RECEIVE', 'FOLLOW', 'DRAFT', 'VOTE', 'SIGNAL', 'ANSWER', 'HASHTAG', 'HASHASHTAG')
+order by uc.table_name, uc.constraint_type, uc.constraint_name;
+```
+<br>
+
+Liste des triggers de la BDD :
+```SQL
+select
+table_name,
+trigger_name,
+triggering_event,
+trigger_type,
+status,
+description
+from user_triggers
+order by table_name, trigger_name;
+```
+<br>
+
+Liste de tous les utilisateurs :
+```SQL
+select username
+from all_users
+where username not in (
+    'SYS', 'SYSTEM', 'OUTLN', 'DBSNMP', 'MGMT_VIEW', 'APPQOSSYS',
+    'AUDSYS', 'CTXSYS', 'DVSYS', 'FLOWS_FILES', 'MDDATA', 'MDSYS',
+    'ORDDATA', 'ORDSYS', 'XDB', 'WMSYS', 'LBACSYS', 'OLAPSYS',
+    'OWBSYS', 'SPATIAL_CSW_ADMIN_USR', 'SPATIAL_WFS_ADMIN_USR',
+    'SI_INFORMTN_SCHEMA', 'ANONYMOUS', 'APEX_PUBLIC_USER', 'VECSYS',
+    'APEX_040000', 'APEX_050000', 'DIP', 'GSMADMIN_INTERNAL',
+    'GSMCATUSER', 'GSMUSER', 'REMOTE_SCHEDULER_AGENT', 'SYSRAC',
+    'XS$NULL', 'OJVMSYS', 'DBSFWUSER', 'DGPDB_INT', 'DVF', 'GGSHAREDCAP',
+    'GGSYS', 'GSMROOTUSER', 'SYSBACKUP', 'SYSDG', 'SYSKM', 'SYS$UMF'
+)
+order by username;
 ```
 <br>
