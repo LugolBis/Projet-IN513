@@ -534,3 +534,324 @@ end;
 /
 ```
 <br>
+
+## Droits
+
+On suppose que toutes les intéractions non permises explicitement sont interdites ! Un réseau social est un système dynamique et dangereux qui se doit de modérer vigoureusement les données qu’on lui soumet.
+
+### Role : client
+Création du rôle :
+```SQL
+create role client;
+grant create session to client;
+grant create view to client;
+```
+<br>
+
+Les comptes utilisateurs ont le droit d’ajouter et de visualiser des posts et des sondages, d’upvoter/downvoter des posts, de répondre à des sondages et d’enregistrer et de lire leurs brouillons.
+```SQL
+grant select, insert on Post to client, moderator;
+grant select, insert on Survey to client, moderator;
+grant select, insert on Options to client, moderator;
+grant select, insert on Follow to client, moderator;
+grant select, insert on Vote to client, moderator;
+grant select, insert on Hashtag to client, moderator;
+grant select, insert on HasHashtag to client, moderator;
+grant select, insert on Signal to client, moderator;
+```
+<br>
+
+Ils ont également accès au nombre de signalements des posts/sondages et peuvent le modifier dans le respect des contraintes d’intégrités. Évidemment, chaque utilisateur peut accéder à ses informations personnelles, mais pas à celles des autres utilisateurs ! Bien sûr, il est également permis aux utilisateurs de lire leurs messages reçus et envoyés et d’accéder aux données des hashtags. En outre, chaque utilisateur peut accéder aux données non-sensibles des autres utilisateurs comme le pseudonyme, le nombre de followers, les comptes suivis, etc. Un utilisateur n’ayant pas voté à un sondage n'aura pas accès à ses résultats.
+<br>
+
+Droits d'exécutions de procédures pour les utilisateurs :
+- [Activities](https://github.com/uvsq22201674/Projet-IN513/blob/main/requests/client/activities.sql)
+
+	```SQL
+ 	grant execute on is_post_cooldown_up to client, moderator;
+	grant execute on add_hashtag to client, moderator;
+	grant execute on parse_hashtags to client, moderator;
+	grant execute on new_idpost to client, moderator;
+	grant execute on new_idsurvey to client, moderator;
+	grant execute on new_idoption to client, moderator;
+	grant execute on update_location to client, moderator;
+	grant execute on add_post to client, moderator;
+	grant execute on validate_draft to client, moderator;
+	grant execute on add_vote to client, moderator;
+ 	```
+ 
+- [Hashtags](https://github.com/uvsq22201674/Projet-IN513/blob/main/requests/client/hashtag.sql)
+
+	```SQL
+ 	grant execute on get_proportion_hashtag to client, moderator;
+	grant execute on max_frequency_hashtag to client, moderator;
+	grant execute on get_hashtag_day to client, moderator;
+ 	```
+ 
+- [Message thread](https://github.com/uvsq22201674/Projet-IN513/blob/main/requests/client/message_thread.sql) (Messages privés)
+
+	```SQL
+ 	grant execute on get_proportion_message to client, moderator;
+	grant execute on new_id_private_message to client, moderator;
+	grant execute on send_message to client, moderator;
+ 	```
+ 
+- [Survey](https://github.com/uvsq22201674/Projet-IN513/blob/main/requests/client/survey.sql) (Sondages)
+
+	```SQL
+ 	grant execute on add_survey to client, moderator;
+	grant execute on add_option to client, moderator;
+	grant execute on add_answer to client, moderator;
+	grant execute on survey_result to client, moderator;
+ 	```
+
+- [Utilisateurs](https://github.com/uvsq22201674/Projet-IN513/blob/main/requests/client/users.sql)
+
+	```SQL
+ 	grant execute on get_average_rank_post to client, moderator;
+	grant execute on get_linked_user to client, moderator;
+ 	```
+
+- [Views - Grades](https://github.com/uvsq22201674/Projet-IN513/blob/main/views/grades.sql)
+
+	```SQL
+ 	grant execute on get_user_count to client, moderator;
+ 	grant select on Goat to client, moderator;
+ 	grant select on Influencer to client, moderator;
+ 	grant select on Nobody to client, moderator;
+ 	```
+
+### Role : moderator
+Création du rôle :
+```SQL
+create role moderator;
+grant create session to moderator;
+grant create view to moderator;
+```
+<br>
+
+Le compte modérateur a tous les droits des utilisateurs ainsi que les droits de supprimer des posts/sondages, de bannir temporairement ou de supprimer définitivement des utilisateurs.
+```SQL
+grant execute on admin.add_user to moderator;
+grant delete on Post to moderator;
+grant delete on Survey to moderator;
+grant update (date_end, ban_reason) on Users to moderator;
+```
+<br>
+
+Il doit être en capacité de lire les adresses IP et mails des utilisateurs pour pouvoir veiller au mieux à empêcher l’utilisation de plusieurs comptes par une même personne visant à fausser les votes. Néanmoins il n’a absolument pas l’autorité de modifier ces deux données.
+```SQL
+-- PL/SQL
+
+-- Fonction permettant de récupérer l'adresse IP d'un utilisateur
+create or replace function get_IPadress(TARGET_USER in varchar2)
+return varchar2 as
+    RESULT varchar2(15) := '';
+begin
+    select IPaddress into RESULT
+    from Users
+    where pseudo = TARGET_USER;
+
+    return RESULT;
+end;
+/
+
+-- Fonction permettant de récupérer l'adresse mail d'un utilisateur
+create or replace function get_Mail(TARGET_USER in varchar2)
+return varchar2 as
+    RESULT varchar2(64) := '';
+begin
+    select mail into RESULT
+    from Users
+    where pseudo = TARGET_USER;
+
+    return RESULT;
+end;
+/
+```
+```SQL
+grant execute on get_IPadress to moderator;
+grant execute on get_Mail to moderator;
+```
+<br>
+
+### Utilisateur : admin
+L'utilisateur ```admin``` est utilisé pour déployer et administrer la base de données. Étant donné que c'est l'```admin``` qui crée la BDD les tables et procédures lui sont liés.
+
+Création de l'utilisateur :
+```SQL
+create user admin identified by banane;
+grant create session to admin;
+grant unlimited tablespace to admin;
+grant create table to admin;
+grant create procedure to admin;
+grant create user to admin;
+grant create trigger to admin;
+grant create view to admin;
+grant grant any role to admin;
+```
+<br>
+
+## Vues
+
+Il existe quatre vues correspondant aux quatre rangs d’utilisateurs, définit par leurs votes :
+1. Goat        : 1% des meilleurs utilisateurs
+2. Influenceur : 1-50% des meilleurs utilisateurs
+3. Nobody      : 50% des meilleurs utilisateurs
+
+```SQL
+-- PL/SQL
+
+-- Fonction permettant de calculer le nombre d'utilisateurs total
+create or replace function get_user_count return number as
+	n number := 0;
+begin
+	select
+		count(pseudo) into n
+	from
+		Rank;
+
+	return n;
+end;
+/
+```
+```SQL
+-- Vue Goat
+create or replace view Goat as select
+	pseudo, rank
+from
+	Rank
+where
+	rownum <= 0.1 * get_user_count;
+
+-- Vue Influencer
+create or replace view Influencer as select
+	pseudo, rank
+from
+	Rank
+where
+	rownum > 0.1 * get_user_count and
+	rownum <= 0.5 * get_user_count;
+
+-- Vue Nobody
+create or replace view Nobody as select
+	pseudo, rank
+from
+	Rank
+where
+	rownum > 0.5 * get_user_count;
+```
+<br>
+
+On note également la vue Tendance des 10 hashtags les plus utilisés dans les sept jours précédents.
+```SQL
+create or replace view Tendance as
+select HH.hashtag as hashtag, count(HH.idpost) as nb_posts
+from HasHashtag HH, Post P
+where P.idpost=HH.idpost and P.date_post>=(SYSDATE-7)
+group by HH.hashtag
+order by nb_posts desc 
+fetch first 10 rows only;
+
+grant select on Tendance to client, moderator;
+```
+<br>
+
+La vue MyMessage quant à elle se charge de contenir tous les messages (reçus et envoyés)  ainsi que leur date d’envoie pour chaque utilisateur.
+```SQL
+create or replace view MyMessages as select
+	pm.sender as sender, r.pseudo as recipient, pm.message as message,
+	pm.date_send as date_send
+from
+	PrivateMessage pm, Receive r
+where
+	pm.idpm = r.idpm and
+	(pm.sender = lower(user) or r.pseudo = lower(user));
+
+grant select, update, delete on MyMessages to client, moderator;
+```
+<br>
+
+La vue Sanctions qui permet d’obtenir la liste des utilisateurs bannis ainsi que la durée restante de leur bannissement.
+```SQL
+create or replace view Sanctions as
+select pseudo, ban_end - SYSDATE as time_left, ban_reason
+from Users
+where SYSDATE < ban_end;
+
+grant select on Sanctions to client, moderator;
+```
+<br>
+
+La vue Rank qui permet d’obtenir le classement de tous les utilisateurs.
+```SQL
+create or replace view Rank as
+select Post.pseudo as pseudo, sum(Vote.value) as rank
+from Post, Vote
+where Post.idpost = Vote.idpost
+group by Post.idpost, Post.pseudo
+order by rank desc;
+
+grant select on Rank to client, moderator;
+```
+<br>
+
+La vue TopUser qui permet d’obtenir les utilisateurs les plus suivis.
+```SQL
+create or replace view TopUser as
+select Users.pseudo, count(*) as nb_followers
+from Users left join Follow on Users.pseudo=Follow.pseudo
+group by Users.pseudo
+order by nb_followers desc;
+
+grant select on TopUser to client, moderator;
+```
+<br>
+
+La vue Feed qui permet d’obtenir tous les posts des utilisateurs que l’on suit.
+```SQL
+create or replace view Feed as
+select * from Post
+where pseudo in (select pseudo from Follow where follower=lower(user))
+order by date_post desc;
+
+grant select on Feed to client, moderator;
+```
+<br>
+
+La vue RankPost qui contient le rank (somme des upvotes et des downvotes), le nombre d’upvotes et le nombre de downvotes d’un post.
+```SQL
+create or replace view RankPost as
+select sum(value) as rank,
+   sum(case when Vote.value > 0 then 0 else 1 end) as downvotes,
+   sum(case when Vote.value > 0 then 1 else 0 end) as upvotes
+from Vote
+group by idpost;
+
+grant select on RankPost to client, moderator;
+```
+<br>
+
+La vue MyDraft qui contient tous les brouillons d’un utilisateur donné.
+```SQL
+create or replace view MyDraft as
+select * 
+from Draft 
+where pseudo = lower(user)
+order by iddraft desc;
+
+grant select, update, delete on MyDraft to client, moderator;
+```
+<br>
+
+La vue UrgentSignal qui contient tous les posts les plus signalés.
+```SQL
+create or replace view UrgentSignal as
+select idpost
+from Signal
+group by idpost
+having count(*) >= 30;
+
+grant select on UrgentSignal to moderator;
+```
+<br>
