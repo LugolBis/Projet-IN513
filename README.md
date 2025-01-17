@@ -1,4 +1,4 @@
-# Projet - IN513
+# SNUV - Social Network of the University of Versailles
 
 ## Contributeurs
 - [@LugolBis - Loïc DESMARES](https://github.com/LugolBis)
@@ -7,6 +7,8 @@
 # Cahier des charges et Implémentation
 
 ## Contexte
+Projet effectué dans le cadre de la matière ***IN513*** de l'***UVSQ*** (***Paris-Saclay***).
+<br>
 L'application modélisée par la base de données est un réseau social à l’échelle de l’université. Les utilisateurs peuvent poster des messages ou des sondages sur 
 un mur et envoyer des messages à d'autres utilisateurs. Le projet se concentre sur la gestion de bout en bout d'une base de donnée complexe et 
 dynamique (d'où l'absence de frontend).
