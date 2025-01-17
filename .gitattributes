@@ -1,3 +1,12 @@
 *.html linguist-detectable=false
-*.sql linguist-vendored=false
-*.sql linguist-language=SQL
+
+# Inclure les fichiers .sql dans les statistiques linguistiques et les traiter comme du SQLPL
+RENDU/*.sql linguist-detectable=true linguist-language=SQLPL
+constraints/*.sql linguist-detectable=true linguist-language=SQLPL
+model-definition/*.sql linguist-detectable=true linguist-language=SQL
+requests/*.sql linguist-detectable=true linguist-language=SQLPL
+requests/admin/*.sql linguist-detectable=true linguist-language=SQLPL
+requests/client/*.sql linguist-detectable=true linguist-language=SQLPL
+requests/moderator/*.sql linguist-detectable=true linguist-language=SQLPL
+rights/*.sql linguist-detectable=true linguist-language=SQL
+view/*.sql linguist-detectable=true linguist-language=SQLPL
