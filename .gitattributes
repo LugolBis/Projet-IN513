@@ -1,2 +1,2 @@
 *.html linguist-detectable=false
-*.sql linguist-language=PL/SQL
+*.sql linguist-language=SQL
