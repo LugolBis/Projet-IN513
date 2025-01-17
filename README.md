@@ -191,23 +191,23 @@ end;
 Un utilisateur signalé un nombre conséquent de fois se voit infligé un bannissement temporaire de l’application.
 
 Au contraire, les utilisateurs avec un nombre d’upvotes total suffisant obtiennent des titres honorifiques en récompense affichés sur leur profils.
-[Voir la section sur les vues](https://github.com/uvsq22201674/Projet-IN513/blob/main/rendu.md#vues)
+[Voir la section sur les vues](https://github.com/uvsq22201674/Projet-IN513/blob/main/README.md#vues)
 <br>
 De même, un utilisateur peut choisir de “suivre” d’autres utilisateurs ce qui lui permettra de filtrer les posts sur le mur de manière à ne voir que ceux des utilisateurs suivis.
-[Voir la section sur les droits](https://github.com/uvsq22201674/Projet-IN513/blob/main/rendu.md#droits)
+[Voir la section sur les droits](https://github.com/uvsq22201674/Projet-IN513/blob/main/README.md#droits)
 <br>
 Lors de la rédaction d’un post, il est possible de le sauvegarder en tant que brouillon afin de continuer à le modifier plus tard sans le publier immédiatement.
-[Voir la section sur les vues](https://github.com/uvsq22201674/Projet-IN513/blob/main/rendu.md#vues)
+[Voir la section sur les vues](https://github.com/uvsq22201674/Projet-IN513/blob/main/README.md#vues)
 <br>
 Cela suppose une certaine sécurité des comptes utilisateurs, qui devront donc s’identifier à l’aide d’un mot de passe secret.
-[Voir la section sur les droits](https://github.com/uvsq22201674/Projet-IN513/blob/main/rendu.md#droits)
+[Voir la section sur les droits](https://github.com/uvsq22201674/Projet-IN513/blob/main/README.md#droits)
 <br>
 
 ## Posts
 Les posts sont des messages textuels publics courts (quelque centaines de caractères au maximum) affichés sur le mur par ordre chronologique décroissant (du plus récent au plus ancien).
 <br>
 Il est possible de filtrer les messages apparaissant sur le mur en fonction de critères divers (lieu ou heure de publication, auteur de la publication, hashtags impliqués, 
-popularité du post, etc.). [Voir la section sur les vues](https://github.com/uvsq22201674/Projet-IN513/blob/main/rendu.md#vues)
+popularité du post, etc.). [Voir la section sur les vues](https://github.com/uvsq22201674/Projet-IN513/blob/main/README.md#vues)
 <br>
 Il est entendu que les interactions des utilisateurs sur les posts sont la fonctionnalité primordiale de notre application !
 <br>
@@ -943,3 +943,379 @@ where username not in (
 order by username;
 ```
 <br>
+
+## Requêtes d'exemple sur la BDD
+
+1. Quelle est la liste des hashtags utilisés par [pseudo] ?
+	```SQL
+	select distinct HH.hashtag
+	from admin.HasHashtag HH, admin.Post P
+	where HH.idpost = P.idpost
+	and P.pseudo = 'lulu';
+	```
+2. Quelle est la moyenne des votes des posts de [pseudo] ?
+	```SQL
+ 	-- PL/SQL
+   
+ 	create or replace function get_average_rank_post(TARGET_USER in varchar2)
+ 	return number as
+ 		RESULT number(7) := 0;
+	begin
+		select avg(V.value) into RESULT
+		from Vote V, Post P
+	        where V.idpost = P.idpost
+	        and P.pseudo = TARGET_USER;
+
+		return RESULT;
+	end;
+	/
+	```
+3. Est-ce que [pseudo] est suivi par au moins un des utilisateurs que je suis ?
+	```SQL
+ 	-- PL/SQL
+ 
+ 	create or replace function get_linked_user(TARGET_USER in varchar2)
+	return boolean as
+	    RESULT number(6);
+	begin
+	    select count(*) into RESULT
+	    from admin.Follow F1, admin.Follow F2
+	    where F1.follower = F2.pseudo
+	    and F1.pseudo = TARGET_USER
+	    and F2.follower = lower(user);
+	
+	    return RESULT > 0;
+	end;
+	/
+	```
+4. Quels sont les utilisateurs que je suis et qui me suivent ?
+	```SQL
+ 	SELECT F1.follower AS mutual_follow
+	FROM admin.Follow F1, admin.Follow F2
+	WHERE F1.follower = F2.pseudo
+	AND F1.pseudo = lower(user) AND F2.follower = lower(user);
+ 	```
+5. Quels sont les utilisateurs qui suivent [pseudo] ET qui sont suivis par [pseudo] ?
+	```SQL
+ 	SELECT F1.follower AS mutual_follow
+	FROM admin.Follow F1
+	JOIN admin.Follow F2 ON F1.follower = F2.pseudo
+	WHERE F1.pseudo = 'jojo' AND F2.follower = 'lulu';
+ 	```
+6. Quels sont les utilisateurs que je suis mais qui ne me suivent pas ?
+	```SQL
+ 	SELECT F1.follower AS not_following_back
+	FROM admin.Follow F1
+	LEFT JOIN admin.Follow F2 ON F1.follower = F2.pseudo AND F2.follower = lower(user)
+	WHERE F1.pseudo = lower(user) AND F2.pseudo IS NULL;
+ 	```
+7. Quel est l'utilisateur qui approuve/désapprouve le plus de mes posts ?
+	```SQL
+ 	select V.pseudo, sum(V.value) as upvotes
+	from admin.Vote V, admin.Post P
+	where V.idpost = P.idpost
+	and V.value > 0 and P.pseudo = lower(user)
+	group by V.pseudo
+	having upvotes > 0
+	order by upvotes desc;
+	
+	select V.pseudo, sum(V.value) as downvotes
+	from admin.Vote V, admin.Post P
+	where V.idpost = P.idpost
+	and V.value < 0 and P.pseudo = lower(user)
+	group by V.pseudo
+	having downvotes > 0
+	order by downvotes desc;
+ 	```
+8. Quels sont les récents posts de [pseudo] ?
+	```SQL
+	select *
+	from admin.Post
+	where pseudo = 'lulu'
+	order by date_post desc;
+ 	```
+9. Quels sont les posts émis depuis [building et/ou room] ?
+	```SQL
+	select *
+	from admin.Post
+	where building = 'Fermat'
+	and room = 'Amphi J'
+	order by date_post desc;
+ 	```
+10. Quels sont les posts postés entre [date_debut] et [date_fin] ?
+	```SQL
+	select *
+	from admin.Post
+	where date_post between date '2012-08-30' and date '2012-10-11'
+	order by date_post desc;
+ 	```
+11. Quels sont les [n] posts les plus récents ?
+	```SQL
+ 	select *
+	from admin.Post
+	order by date_post desc
+	fetch first 15 rows only;
+ 	```
+12. Quels sont les posts contenant [mot(s)] ?
+	```SQL
+ 	select *
+	from admin.Post
+	where REGEXP_LIKE(message, 'Banane', 'i') = TRUE
+	order by date_post desc;
+ 	```
+13. Quels sont les posts utilisant le hashtag [#hashtag] ?
+	```SQL
+ 	select *
+	from admin.Post
+	where idpost in (
+	    select idpost 
+	    from admin.HasHashtag
+	    where hashtag= 'genant')
+	order by date_post desc;
+ 	```
+14. Quels sont les posts les plus upvotés/downvotés ?
+	```SQL
+ 	select P.idpost, P.message, P.date_post, P.room, P.building, P.pseudo, NVL(V.rank, 0) as rank
+	from admin.Post P
+	left join (
+	    select V.idpost, count(V.pseudo) as rank
+	    from admin.Vote V
+	    where V.value = 1
+	    group by V.idpost
+	) V
+	on P.idpost = V.idpost
+	order by rank desc;
+ 	```
+15. Quels utilisateurs ont utilisé les hashtags en tendance ? (Quel est l’intervalle temporel de cette requête ?)
+	```SQL
+ 	select pseudo
+	from admin.Post 
+	where date_post >= SYSDATE-7
+	and idpost in (
+	    select idpost
+	    from admin.HasHashtag
+	    where hashtag in (
+	        select hashtag
+	        from admin.Tendance
+	    )
+	)
+	order by date_post desc;
+ 	```
+16. Quelle est la proportion de hashtags tendance/non tendance utilisés par un utilisateur ?
+	```SQL
+ 	-- PL/SQL
+ 
+ 	create or replace function get_proportion_hashtag(TARGET_USER in varchar2) return number as
+	    total_hashtags number(6);
+	    total_tendance number(6);
+	begin
+	    select count(*) into total_hashtags
+	    from admin.Post
+	    where date_post >= SYSDATE-7
+	    and pseudo = TARGET_USER
+	    and idpost in (
+	        select idpost
+	        from admin.HasHashtag
+	    );
+	
+	
+	    select count(*) into total_tendance
+	    from admin.Post
+	    where date_post >= SYSDATE-7
+	    and pseudo = TARGET_USER
+	    and idpost in (
+	        select idpost
+	        from admin.HasHashtag
+	        where hashtag in (
+	            select hashtag
+	            from admin.Tendance
+	        )
+	    );
+	
+	    if total_hashtags < 1 then
+	        return 0;
+	    else
+	        return (total_tendance*100)/total_hashtags;
+	    end if;
+	end;
+	/
+ 	```
+17. Quel sont les hashtags les plus fréquemment postés avec le hashtag [a] ?
+	```SQL
+ 	-- PL/SQL
+ 
+ 	create or replace function max_frequency_hashtag(HT in varchar)
+	return number as
+	    RESULT number(6);
+	begin
+	    select count(*) into RESULT
+	    from admin.HasHashtag h1, admin.HasHashtag h2
+	    where h1.idpost = h2.idpost
+	    and h1.hashtag = HT
+	    and h2.hashtag != HT
+	    group by h2.hashtag;
+	
+	    return RESULT;
+	end;
+	/
+
+	select h2.hashtag, count(*) as occurence
+	from admin.HasHashtag h1, admin.HasHashtag h2
+	where h1.idpost = h2.idpost
+	and h1.hashtag = 'genant'
+	and h2.hashtag != 'genant'
+	group by h2.hashtag
+	having occurence = admin.max_frequency_hashtag('genant')
+	order by occurence desc;
+	```
+18. Quel est le jour durant lequel un hashtag [a] a été le plus posté ?
+	```SQL
+ 	-- PL/SQL
+ 
+	create or replace function get_hashtag_day(HASHTAG in varchar2) return date as
+	    DATE_RESULT date := SYSDATE;
+	begin
+	    select trunc(P.date_post) into DATE_RESULT
+	    from admin.Post P, admin.HasHashtag HH
+	    where HH.idpost = P.idpost and HH.hashtag = HASHTAG
+	    group by trunc(P.date_post)
+	    order by count(*) desc
+	    fetch first 1 rows only;
+	
+	    return DATE_RESULT;
+	end;
+	/
+ 	```
+19. Quels sont les sondages contenant [mot(s)] dans sa question ?
+	```SQL
+	select *
+	from admin.Survey
+	where REGEXP_LIKE(question, 'genant', 'i') = TRUE;
+ 	```
+20. Quels sont les sondages contenant [mot(s)] dans ses options ?
+	```SQL
+ 	select *
+	from admin.Survey
+	where idsurvey in (
+	    select idsurvey
+	    from admin.Options
+	    where REGEXP_LIKE(content, 'banane', 'i') = TRUE
+	);
+	```
+21. Quel est le pourcentage d'utilisateurs ayant choisi cette [option] à cette [question] ?
+	```SQL
+ 	-- PL/SQL
+ 
+	create or replace function survey_result(TARGET_OPTION in varchar2, TARGET_SURVEY in number)
+	return number as
+	    VOTED number(3);
+	    TOTAL_VOTERS number(7);
+	begin
+	    select count(*) into VOTED
+	    from Options O, Survey S
+	    where O.idsurvey = S.idsurvey
+	    and O.content = TARGET_OPTION
+	    and S.idsurvey = TARGET_SURVEY
+	    group by O.idoption;
+	
+	    select count(*) into TOTAL_VOTERS
+	    from Options O, Survey S
+	    where O.idsurvey = S.idsurvey
+	    and S.idsurvey = TARGET_SURVEY;
+	
+	    return VOTED/TOTAL_VOTERS;
+	end;
+	/
+	```
+22. Quels sont les sondages comptabilisant le plus de votants ?
+	```SQL
+ 	select S.idsurvey, S.question, S.idpost, NVL(RES.rank, 0) as rank 
+	from admin.Survey S
+	left join (
+	    select O.idsurvey as id, count(*) as rank
+	    from admin.Answer A 
+	    left join admin.Options O on A.idoption = O.idoption
+	    group by O.idsurvey
+	) RES
+	on S.idsurvey = RES.id
+	order by rank desc;
+ 	```
+23. Quels sont les sondages contenant [n] options ?
+	```SQL
+	select *
+	from admin.Survey
+	where idsurvey in (
+	    select idsurvey
+	    from admin.Options
+	    group by idsurvey
+	    having count(distinct idoption) = 2
+	);
+ 	```
+24. Quel est le brouillon le plus récent que j'ai rédigé ?
+	```SQL
+	select message
+	from admin.MyDraft
+	fetch first 1 rows only;
+ 	```
+25. Quel est le plus long brouillon que j’ai rédigé ?
+	```SQL
+ 	select message
+	from admin.MyDraft
+	where length(message) = (select max(length(message)) from admin.MyDraft);
+ 	```
+26. Quelles sont mes dernières discussions privées ?
+	```SQL
+	select distinct pseudo
+	from(
+		select a.pseudo as pseudo, a.date_send
+		from (
+			select recipient as pseudo, date_send
+			from admin.MyMessages
+			where sender = lower(user)
+			union
+			select sender as pseudo, date_send
+			from admin.MyMessages
+			where recipient = lower(user)
+		) a
+		order by a.date_send
+	);
+ 	```
+27. Quelle est la proportion de messages envoyés/messages reçus de l’utilisateur A à l’utilisateur B ?
+	```SQL
+ 	-- PL/SQL
+ 
+	create or replace function get_proportion_message(TARGET_USER in varchar2)
+	return number as
+	    total_messages number(6);
+	    total_send number(6);
+	begin
+	    select count(*) into total_messages
+	    from Receive R, PrivateMessage PM
+	    where R.idpm = PM.idpm
+	    and (
+	        (R.pseudo = lower(user) and PM.sender = TARGET_USER)
+	        or (R.pseudo = TARGET_USER and PM.sender = lower(user))
+	    )
+	    group by R.idpm;
+	
+	    select count(*) into total_send
+	    from Receive R, PrivateMessage PM
+	    where R.idpm = PM.idpm
+	    and R.pseudo = TARGET_USER and PM.sender = lower(user)
+	    group by R.idpm;
+	
+	    if total_messages < 1 then
+	        return 0;
+	    else
+	        return (total_send*100)/total_messages;
+	    end if;
+	end;
+	/
+ 	```
+28. Quels sont les utilisateurs qui ont voté pour tous les posts ?
+	```SQL
+ 	select pseudo
+	from admin.Vote
+	group by pseudo
+	having count(idpost) = (select count(*) from admin.Post);
+ 	```
