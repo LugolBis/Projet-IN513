@@ -4,7 +4,7 @@
 - [@LugolBis - Loïc DESMARES](https://github.com/LugolBis)
 - [@Sama GHARIB ALI BARURA](https://github.com/sama-gharib)
 
-# Cahier des charges
+# Cahier des charges et Implémentation
 
 ## Contexte
 L'application modélisée par la base de données est un réseau social à l’échelle de l’université. Les utilisateurs peuvent poster des messages ou des sondages sur 
